@@ -120,8 +120,8 @@ MongoClient.connect('mongodb://127.0.0.1:27017/raouf', function(err, db) {
 app.get('/jar', function (req, res) {
 
   var exec = require('child_process').exec, child;
-     // child = exec('/usr/bin/java -cp /root/Downloads/work/Json2BP-1.0-SNAPSHOT-jar-with-dependencies.jar com.mycompany.json2bp.MainClass /root/Downloads/try.json',
-     child = exec('/usr/bin/java -cp /root/Downloads/work/Json2BP-1.0-SNAPSHOT-jar-with-dependencies.jar com.mycompany.json2bp.MainClass  /root/Downloads/node-red-0.9.0/flows_localhost.json',
+     
+     child = exec('/usr/bin/java -cp /root/Home/Git/policy_node-red/extension/Json2BP-1.0-SNAPSHOT-jar-with-dependencies.jar com.mycompany.json2bp.MainClass  /root/Home/Git/policy_node-red/flows_localhost.json',
       function (error, stdout, stderr){
       console.log('stdout: ' + stdout);
       console.log('stderr: ' + stderr);
