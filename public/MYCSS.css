@@ -1,0 +1,174 @@
+/*                                                             start 3 tab                                                 */
+.container {
+    position: relative;
+    width: 500px;
+}
+.container div {
+    height: 300px;
+}
+
+.column-left {
+    width: 33%;
+    left: 0;
+    background: #00F;
+    position: absolute;
+}
+.column-center {
+    width: 34%;
+    background: #933;
+    margin-left: 33%;
+    position: absolute;
+}
+.column-left-tab {
+    border:1px solid #ccc;
+    border-radius:5px;
+    overflow: hidden;
+    width: 33%;
+    left: 0;
+    background: #00F;
+    position: absolute;
+}
+.column-center-tab {
+    border:1px solid #ccc;
+    border-radius:5px;
+    overflow: hidden;
+    width: 33%;
+    background: #933;
+    margin-left: 33%;
+    position: absolute;
+}
+.column-right-tab {
+    border:1px solid #ccc;
+    border-radius:5px;
+    overflow: hidden;
+    width: 33%;
+    right: 0;
+    position: absolute;
+    background: #999;
+}
+
+
+.column-right {
+    width: 33%;
+    right: 0;
+    position: absolute;
+    background: #999;
+}
+
+/*                                                             end 3 tab                                                   */
+
+/*   added Tabs CSS code                */
+
+#ts_tabmenu {
+    font-size: .75em;
+    padding: 20px 0px 0px 20px;
+}
+#ts_tabmenu ul
+{
+    line-height: 1em;
+    margin: 0px;
+    list-style-type: none;
+    float: left;
+    padding: 0px 0px 0px 5px;
+}
+#ts_tabmenu ul li
+{
+    float: left;
+}
+#ts_tabmenu ul li a
+{
+    text-decoration: none;
+    display: block;
+    float: left;
+    padding: 0px 0px 0px 10px;
+    background: url(tabs.gif) no-repeat left top;
+    margin-left: -5px;
+    z-index: 0;
+    position: relative;
+    color: #666666;
+}
+#ts_tabmenu ul li a strong
+{
+    font-weight: normal; /* remove the bold effect */
+    display: block;
+    background: url(tabs.gif) no-repeat right top;
+    padding: 6px 10px 7px 5px;
+    cursor: pointer;
+}
+#ts_tabmenu ul li a:hover
+{
+    position: relative;
+    z-index: 5;
+    background: url(tabs.gif) no-repeat left bottom;
+    color: #000000;
+}
+#ts_tabmenu ul li a:hover strong
+{
+    background-image: url(tabs.gif) no-repeat;
+    position: relative;
+    z-index: 5;
+    background-position: right bottom;
+}
+#ts_tabmenu ul li
+{
+  display:inline-block;
+  float: left;
+}
+
+/*        first end        */
+
+#centeredmenu {
+   float:left;
+   width:100%;
+   background:#fff;
+   border-bottom:4px solid #000;
+   overflow:hidden;
+   position:relative;
+}
+#centeredmenu ul {
+   clear:left;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   left:50%;
+   text-align:center;
+}
+#centeredmenu ul li {
+   display:block;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   right:50%;
+}
+#centeredmenu ul li a {
+   display:block;
+   margin:0 0 0 1px;
+   padding:3px 10px;
+   background:#ddd;
+   color:#000;
+   text-decoration:none;
+   line-height:1.3em;
+}
+#centeredmenu ul li a:hover {
+   background:#369;
+   color:#fff;
+}
+#centeredmenu ul li a.active,
+#centeredmenu ul li a.active:hover {
+   color:#fff;
+   background:#000;
+   font-weight:bold;
+}
+
+
+.box2 {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  margin: 2em;
+}
+/*  end                                  */

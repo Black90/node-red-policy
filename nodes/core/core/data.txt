@@ -1,0 +1,214 @@
+if ($reply.length) {
+
+           alert(" not zero ");
+            $reply.toggle();
+        } else {
+     alert(" entring else ");
+            $(NewContent).insertAfter($this);
+        }
+:::::********************************************************************************************:::::::::::::::::
+
+
+<script type="text/javascript">
+    RED.nodes.registerType('test',{
+        category: 'function',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:"Test"},
+            field1: {value:"flash"},
+            field2: {value:" drive"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "arrow-in.png",
+        label: function() {
+            return this.name||"test";
+        },
+
+
+
+oneditprepare: function() {
+
+//window.alert("Hello! I am an alert box!!",$(this.field1));
+// generate dynamiclly other fields that will contain 
+//$('#ToDoList').on('click', "input[name='todo']", function() { ... });
+
+//function notify() {
+//alert( "clicked" );
+//}
+//$( "#node-input-policy" ).on( "click", notify );
+
+//$("#node-input-policy").click(function () {
+//    $("#txtAge").toggle(this.checked);
+//    window.alert("Hello! The checkbox is true ! (txtAge)");
+//});
+
+ //$("#node-input-policy").on('click', function(){
+ //  var isChecked = this.checked
+  //        if (isChecked == true){
+ //          $("#txtAge").toggle(this.checked);
+ //        window.alert("Hello! The checkbox is true ! (txtAge)"); 
+ //       }
+ //       if (isChecked == false)
+ //       {
+ //       window.alert("checkbox is NOT checked");
+ //       }});
+
+
+$( "#tabs" ).tabs();
+// new part 
+
+
+
+
+function click(){
+      $(function() {
+           $( "#dialog" ).dialog({
+            width : 250,
+            height: 180,
+            modal : true
+            });
+            });
+           }
+
+// notify function thanks a lot 
+function notify() {
+//                    alert( "clicked" );
+var NewContent = '<div class="reply"><input name="name" id="new-div"></div>';
+//                    alert("created the new content");
+var $this = $(this), $reply = $this.next('.reply');
+$(NewContent).insertAfter($this);
+}
+
+//alert("going in ");
+$( "#node-input-policy" ).on( "click", notify );
+$( "#node-lock" ).on( "click", notify );
+
+
+},
+
+oneditsave: function() {
+
+
+ }
+
+ });
+
+// end of this section
+   
+</script>
+
+<script type="text/x-red" data-template-name="test">
+
+<div id="tabs">
+<ul>
+<li><a href="#fragment-1"><span>Deploy Service </span></a></li>
+<li><a href="#fragment-2"><span> Test </span></a></li>
+<li><a href="#fragment-3"><span>Define Policy</span></a></li>
+</ul>
+<div id="fragment-1">
+<div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-func"><i class="fa fa-wrench"></i> Function</label>
+        <input type="hidden" id="node-input-func" autofocus="autofocus">
+        <div style="height: 250px;" class="node-text-editor" id="node-input-func-editor" ></div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-outputs"><i class="fa fa-random"></i> Outputs</label>
+        <input id="node-input-outputs" style="width: 60px; height: 1.7em;" value="1">
+    </div>
+    <div class="form-tips">See the Info tab for help writing functions.</div>
+</div>
+<div id="fragment-2">
+ 
+ <select>
+  <option value="volvo">Volvo</option>
+  <option value="saab">Saab</option>
+  <option value="mercedes">Mercedes</option>
+  <option value="audi">Audi</option>
+</select> 
+</div>
+
+
+
+<div id="fragment-3">
+ <a  class="btn btn-mini" id="node-lock" style="margin-top: 4px;" ><i class="fa fa-plus"></i> Lock </a>
+</div>
+
+
+
+
+
+<script type="text/x-red" data-help-name="test">
+    <p>A simple node that will add some fields to  the message payload </p>
+</script>
+
+
+::::::::::::::::::::::::*******************************************************************::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+
+
+//window.alert("Hello! I am an alert box!!",$(this.field1));
+// generate dynamiclly other fields that will contain 
+//$('#ToDoList').on('click', "input[name='todo']", function() { ... });
+
+//function notify() {
+//alert( "clicked" );
+//}
+//$( "#node-input-policy" ).on( "click", notify );
+
+//$("#node-input-policy").click(function () {
+//    $("#txtAge").toggle(this.checked);
+//    window.alert("Hello! The checkbox is true ! (txtAge)");
+//});
+
+ //$("#node-input-policy").on('click', function(){
+ //  var isChecked = this.checked
+  //        if (isChecked == true){
+ //          $("#txtAge").toggle(this.checked);
+ //        window.alert("Hello! The checkbox is true ! (txtAge)"); 
+ //       }
+ //       if (isChecked == false)
+ //       {
+ //       window.alert("checkbox is NOT checked");
+ //       }});
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+alert(save loding);
+alert($("#new-div").val());
+this.topic = $("#new-div").val();
+alert(this.topic);
+
+
+
+
+
+
+
+
+
+
+
+
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: palette
+ <div id="palette">
+   
+               <div id="palette-container" class="palette-scroll" style= "display: block;">
+                       // <div class="palette-category">
+                             //  <div id="header-object" class="palette-header"> <i class="expanded fa fa-caret-down"></i> <span> Object </span> </div> 
+                                            <div class="palette-content" id="palette-base-category-object">
+                                                 //      <div id="palette-object-input">
+             <a  class="btn btn-mini" id="node-1" style="margin-top: 4px;" ><i class="fa fa-plus"></i> node1 </a>
+             <a  class="btn btn-mini" id="node-2" style="margin-top: 4px;" ><i class="fa fa-plus"></i> node2 </a>
+                                                   //     </div>
+                                             </div>
+        
+                        //  </div>
+              </div>
+       </div>

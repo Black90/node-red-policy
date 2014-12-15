@@ -1,0 +1,446 @@
+
+<script type="text/javascript">
+var decimal = {};
+
+
+var aux = new Array();
+var lock_number = 0  ; 
+    RED.nodes.registerType('test',{
+        category: 'function',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:"Test"},
+            topic: {value:""},
+            policy: {},
+            field2: {value:"try"}
+          
+        },
+      
+        inputs:1,
+        outputs:3,
+        icon: "arrow-in.png",
+        label: function() {
+            return this.name||"test";
+        },
+
+
+
+oneditprepare: function() {
+
+$( "#tabs" ).tabs();
+// new part 
+$("#tab").click(function() {
+    $("#tab").toggle();
+    $("#panel").slideToggle('slow');
+});    
+
+$("#close").click(function() {
+    $("#tab").toggle();
+    $("#panel").slideToggle('slow');        
+});
+
+                                                                // notify function
+function notify() {
+
+        //     url:  'http://localhost:4242/api',
+        //     type: 'GET',
+        //     contentType: "application/json; charset=utf-8",
+        //     //dataType: 'json',
+        //     crossDomain: true,
+        //     //async:false,
+                
+        //     success: function (result) {
+        //        alert(result.name);
+        //     },
+
+        //     error: function (xhr, ajaxOptions, thrownError) {
+        //         alert("Error: " + xhr.status + " " + thrownError);
+        //     }
+        // });
+       
+}
+function try_json() {
+//  var tt = RED.view.getPolicy();
+//  alert("tt : "+Object.getOwnPropertyNames(tt));
+//  alert("inside try");
+//  var result;
+//  $.getJSON("flows_localhost.json", function(json) {
+//     console.log(json); // this will show the info it in firebug console
+//      alert(Object.getOwnPropertyNames(json));
+// });
+}
+
+function hasIP_Method() {
+
+// RED.view.getPolicy();
+
+// $.ajax({
+//             url:  'http://localhost:4242/api',
+//             type: 'GET',
+//             contentType: "application/json; charset=utf-8",
+//             //dataType: 'json',
+//             crossDomain: true,
+//             //async:false,
+                
+//             success: function (result) {
+//                alert(Object.getOwnPropertyNames(result));
+//                alert(result[Object.getOwnPropertyNames(result)[0]]);
+//                for (var i = 0; i < result.length; i++) {
+//                        var object = result[Object.getOwnPropertyNames(result)[i]];
+//                    for (var property in object) {
+//                             alert('item ' + i + ': ' + property + '=' + object[property]);
+//                                              };
+ 
+//                }
+//             },
+
+//             error: function (xhr, ajaxOptions, thrownError) {
+//                 alert("Error: " + xhr.status + " " + thrownError);
+//             }
+//         });
+// alert("counting");
+
+
+}
+function MinReputationLevel_Method() {
+
+$.ajax({
+            url:  'http://localhost:4242/list',
+            type: 'GET',
+            contentType: "application/json; charset=utf-8",
+            //dataType: 'json',
+            crossDomain: true,
+            //async:false,
+                
+            success: function (result) {
+             
+////////////////////////////////////////////////////////////
+var response = '<div id="comp2" class="reply_MinReputationLevel">';
+ 
+//////////////////////////////////////// this procss is for each iteration 
+              for (var i = 0; i < Object.getOwnPropertyNames(result).length; i++) {
+                                 if (typeof result[Object.getOwnPropertyNames(result)[i]]  === "object" ) {
+                                                           var list = result[Object.getOwnPropertyNames(result)[i]];
+                                             if (Array.isArray(list)) {
+                                                      for (var k = 0; k < list.length; k++) {
+                                                                
+                                                                var object = list[k];
+                                                                var name_array =  new Array();
+                                                                var value_array =  new Array();
+                                                                var t = 0;
+                                                                var field ="";
+                                                                                  for (var property in object) {
+                                                                                         // alert('item ' + k + ': ' + property + '=' + object[property]);
+                                                                                         value_array[t] = object[property] ;  
+                                                                                         name_array[t] = property ; 
+                                                                                         t = t + 1;
+                                                                                         // alert( name_array.length) ;                     
+                                                                                                                };
+
+                                                       // field = field + '<label for="'+ value_array[0]+'">'+ value_array[0]+' </label> <input id="'+ value_array[0]+'">';
+                                                       
+                          field = field + '<label for="user_id_'+lock_number+'">'+ value_array[0]+' </label> <input id="user_id_'+lock_number+'" value=" plz fill it ">';
+                          lock_number = lock_number + 1;
+                          response = response + field;
+                                                 };
+                                             response = response + '<br><input type="button" id="but_1" value="save" ></div>';               
+                                            // alert(response);
+                                            } 
+                                   } else{
+                                     if ( Object.getOwnPropertyNames(result)[i] == "_id"){
+                         decimal["id"] =  result[Object.getOwnPropertyNames(result)[i]];
+    
+                            }
+                                      
+                                      if ( Object.getOwnPropertyNames(result)[i] == " path"){
+                        response = response + '<label for="'+Object.getOwnPropertyNames(result)[i]+'">'+Object.getOwnPropertyNames(result)[i]+'</label> <input id="path" value="'+result[Object.getOwnPropertyNames(result)[i]]+'">' ;}
+                                     
+                                if ( Object.getOwnPropertyNames(result)[i] == "description"){
+                        // response = response + '<input  type="button" id="'+Object.getOwnPropertyNames(result)[i]+'" value="Read About">' ;}
+                        response = response + '<input  type="button" id="but-des" value="Read About">' ;
+                   
+                  }
+                                      };
+
+                           };
+               alert(response);
+               var $this = $(document.getElementById('confi_lock')), $reply = $this.next('.reply_MinReputationLevel');
+                                        $(response).insertAfter($this);
+                          
+                        function help() {  
+                                     alert(result[Object.getOwnPropertyNames(result)[2]]);
+                                        }
+
+
+                         function save() {  
+                                          alert("inside save 1");
+
+
+                                          decimal["path"] =  $("#path").val();
+                                          decimal["user ID"] =  $("#user_id_0").val();
+                                          decimal["group ID"] =  $("#user_id_1").val();
+                                          alert($("#user_id_0").val());
+                                          alert($("#user_id_1").val());
+                                        // decimal = $("#user_id_0").val();
+                                        // decimal = decimal + $("#user_id_1").val(); 
+                                        alert("saved");
+                                        $("#comp2").hide();
+                                        }
+
+                               $("#but_1").on( "click", save );
+                               $("#but-des").on( "click", help );
+                                        },
+
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error: " + xhr.status + " " + thrownError);
+            }
+        });
+}
+
+$( "#node-input-policy" ).on( "click", notify );
+$( "#node-lock" ).on( "click", notify );
+
+                                                                             
+                                                                              // $( "#button-1" ).on( "click", hasIP_Method );
+                                                                              $( "#button-1" ).on( "click", try_json );
+                                                                              $( "#button-2" ).on( "click", MinReputationLevel_Method );
+                                                                              // $( "#button-3" ).on( "click", IsGroupMember_Method );
+                                                                              // $( "#button-4" ).on( "click", MinBalance_Method );
+                                                                              // $( "#button-5" ).on( "click", IsAutenticated_Method );
+                                                                              // $( "#button-6" ).on( "click", IsAuthorised_Method );
+                                                                              // $( "#button-7" ).on( "click", MinTrustLevel_Method );
+                                                                              // $( "#button-8" ).on( "click", IsOwned_Method );
+decimal = this.policy;
+// alert("the policy is " + decimal);
+// alert(typeof this.policy);
+var aux = RED.view.getPolicy(RED.editor.getId());
+
+// if(aux.hasOwnProperty('flow')){ 
+if ( typeof this.policy != "undefined"){  
+if(aux.length != 0){ 
+// alert("inside aux object");  
+var alphaNumeric = this.policy.concat(aux);
+this.policy = alphaNumeric;
+}
+}else {this.policy = aux;}
+
+// alert(this.policy);
+ 
+ // $("#show_policy").on( "click", show );
+  
+    // "name":"",
+    // "type":"app",
+    // "output":"0",
+    // "id":"d856d7bc.bdc14"
+
+/////////////////////////////////////////////////////////////////////////////////////////////////// the Policy content start
+// $('body').on('click', '.detTab', function(){ alert(this.id);});
+// $('#fragment-3').click(function(){
+//     alert("inside the new one");
+//     $dialog.dialog('open');
+//     return false;
+// });
+$( "#show_policy" ).on( "click", policy);
+
+function policy(){
+   
+
+       alert("inside the old one");
+         
+  
+                    ///////////////////// the component that contain the rules
+       var node_input_rule_container = '<div id="div_rule" style="border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">';
+       for (var i = 0; i < decimal.length; i++) {
+        alert("inside for i =" + i);
+        node_input_rule_container = node_input_rule_container + '<a href="#" class="btn-rule" id="'+ i +'" style="margin-top: 4px;"> Rule '+ i +'</a>';
+           };
+            node_input_rule_container = node_input_rule_container + '</div>'  
+        $(node_input_rule_container).appendTo("#fragment-3");
+
+          ////////////////////////////////// once you select a rule 
+
+
+$('body').on('click', '.btn-rule', function(){
+                    
+        var id = this.id;
+        var pre="Object Property :";  
+        for(var property in decimal[id].object){
+                if (decimal[id].object[property] != ""){ pre = pre + '\n' +property +" : "+ decimal[id].object[property]; }
+                }
+        var node_input_object_container = '<pre id="object">'+"  "+ pre +"  "+ '</pre>';
+          $(node_input_object_container).appendTo(document.getElementById("div_rule"));
+        var node_input_flow_container ='<div id="div_flow">';
+                    for (var j = 0; j < decimal[id].flow.length; j++) {
+                      alert("inside for j =" + j);
+                      node_input_flow_container = node_input_flow_container +  '<a href="#" class="btn-flow" id="'+ j +'" style="margin-top: 4px;"> Flow '+ j +'</a>';
+                    };
+                    node_input_flow_container = node_input_flow_container + '</div>'
+         $(node_input_flow_container).appendTo(document.getElementById("div_rule"));
+
+
+           ///////////////////      once you select a flow 
+
+                                  $('body').on('click', '.btn-flow', function(){ 
+                                    var fid = this.id;
+                                    var pre="Target Property :"; 
+                                    var obj = decimal[id].flow[fid];
+                                                                /////////////////////////////////////// display the target or the source 
+                                    var attribue = Object.getOwnPropertyNames(obj)[0]; 
+                                    var tt = obj[attribue]; 
+                                    var fpre = attribue + " Property :";
+                                                      for(var prop in tt ){
+                                                       if (tt[prop] != ""){  fpre = fpre + '\n' +prop +" : "+ tt[prop]; }
+                                                         }
+                                    
+                                    var node_input_source_container = '<pre id="source">'+"  "+ fpre +"  "+ ' </pre>';
+          $(node_input_source_container).appendTo(document.getElementById("div_rule"));  /////////////////////////////////////// display the lock of this lock 
+
+
+                                  var attribue = Object.getOwnPropertyNames(obj)[1];
+                                  var ray = obj[attribue]; 
+                                  var node_input_locks_container = "";
+                                  for (var l = 0; l < ray.length; l++) {
+                                    alert("inside for l =" + l);
+                                     node_input_locks_container =  node_input_locks_container + '<a href="#" class="btn-lock" id="'+ l +'" style="margin-top: 4px;"> Lock '+ l +'</a>';
+                                  };
+
+           $(node_input_locks_container).appendTo(document.getElementById("div_rule"));
+
+
+                                                    //////////////// once you select a lock
+                                   
+                                                                                             $('body').on('click', '.btn-lock', function(){ 
+                                                                                                      var lid = this.id;
+                                                                                                      var lobj = ray[lid];
+                                                                                                      var lpre=" Lock Property :";  
+                                                                                                            for(var lprop in lobj){
+                                                                                                                  if (lobj[lprop] != ""){ lpre = lpre + '\n' + lprop +" : "+ lobj[lprop]; }
+                                                                                                               }
+                                                                                              var node_input_locks_description_container = '<pre>'+"  "+ lpre +"  "+ ' </pre>';
+                                                                                            $(node_input_locks_description_container).appendTo(document.getElementById("div_rule"));
+                                                                                            });
+            
+
+                                  });
+
+
+});
+
+var close = '<a href="#" class="btn btn-mini" id="close_policy" style="margin-top: 4px;"><i class="fa fa-remove"></i> Close</a>';
+$(close).appendTo(document.getElementById("div_rule"));
+var but =document.getElementById("close_policy");
+$(but).on( "click", hide);
+function hide() { alert("closing ..."); $(document.getElementById("object")).remove(); $(document.getElementById("source")).remove(); $(document.getElementById("div_flow")).remove(); $(document.getElementById("div_rule")).remove(); alert("closing");}
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////// the Policy content end 
+// $(document).ready(function() {
+// $('#Policy_dialog').dialog({ autoOpen: false })
+// $("#show_policy").click(function(){ $('#Policy_dialog').dialog('open'); });
+// });
+
+// var text = $('<pre>'+"  "+ decimal[0].object.name +"  "+ '\n' + decimal[0].object.type +"  "+ '\n' +  decimal[0].object.output +"  "+ '\n' +  decimal[0].object.id  +"  "+ ' </pre>').appendTo(container);
+// var deleteButton = $('<a href="#" class="btn btn-mini" id="node-input-remove-rule" style="margin-top: 4px;">).appendTo(container);
+// var addButton = $('<a href="#" class="btn btn-mini" id="node-input-add-rule" style="margin-top: 4px;"><i class="fa fa-plus"></i></a>').appendTo(container);
+
+
+
+},
+
+oneditsave: function() {
+alert("the policy is " + this.name);
+
+
+ }
+
+ });
+
+// end of this section
+   
+</script>
+
+
+
+<script type="text/x-red" data-template-name="test">
+
+<div id="tabs" >
+<ul>
+<li><a href="#fragment-1" ><span>Deploy Service </span></a></li>
+<li><a href="#fragment-2" ><span> Test </span></a></li>
+<li><a href="#fragment-3" ><span>Define Policy</span></a></li>
+</ul>
+
+
+
+
+
+
+<div id="fragment-1" class="detTab">
+ <div class="form-row"> 
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-func"><i class="fa fa-wrench"></i> Function</label>
+        <input type="hidden" id="node-input-func" autofocus="autofocus">
+        <div style="height: 250px;" class="node-text-editor" id="node-input-func-editor" ></div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-outputs"><i class="fa fa-random"></i> Outputs</label>
+        <input id="node-input-outputs" style="width: 60px; height: 1.7em;" value="1">
+    </div>
+    <div class="form-tips">See the Info tab for help writing functions.</div>
+</div>
+
+
+
+
+
+
+
+<div id="fragment-2" class="detTab">
+     
+
+
+
+<input type="checkbox" id="box-1" value="Input" name="input" > Input <br>
+<input type="checkbox" id="box-2" value="Output" name="output" > Output <br>
+<input type="checkbox" id="box-3" value="Service" name="service" > Service <br>
+<input type="checkbox" id="box-4" value="Configuration" name="configuration" > Configuration <br>
+<input type="button" id="button-1" value="HasIP" name="lock-1" >
+<input type="button" id="button-2" value="MinReputationLevel" name="lock-2" > <br>
+<input type="button" id="button-3" value="IsGroupMember" name="lock-3" > 
+<input type="button" id="button-4" value="MinBalance" name="lock-4" > <br>
+<input type="button" id="button-5" value="IsAutenticated" name="lock-5" > 
+<input type="button" id="button-6" value="IsAuthorised" name="lock-6" > <br>
+<input type="button" id="button-7" value="MinTrustLevel" name="lock-7" > 
+<input type="button" id="button-8" value="IsOwned" name="lock-8" > 
+           <div id="confi_lock"  >
+          </div>
+          <div id="history"  >
+         </div>
+</div>
+
+
+     
+
+
+
+
+
+
+
+
+
+
+<div id="fragment-3" class="detTab" >
+ <a  class="btn btn-mini" id="show_policy" style="margin-top: 4px;" > Policy </a><br>
+<div id="display"></div>
+
+
+</div>
+
+
+</script>
+<script type="text/x-red" data-help-name="test">
+    <p>A simple node that will add some fields to  the message payload </p>
+</script>
