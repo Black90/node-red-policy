@@ -1,7 +1,7 @@
 
 <script type="text/javascript">
 var decimal = {};
-
+var nbr=0;
 
 var aux = new Array();
 var lock_number = 0  ; 
@@ -224,126 +224,46 @@ this.policy = alphaNumeric;
 }
 }else {this.policy = aux;}
 
-// alert(this.policy);
- 
- // $("#show_policy").on( "click", show );
-  
-    // "name":"",
-    // "type":"app",
-    // "output":"0",
-    // "id":"d856d7bc.bdc14"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////// the Policy content start
-// $('body').on('click', '.detTab', function(){ alert(this.id);});
-// $('#fragment-3').click(function(){
-//     alert("inside the new one");
-//     $dialog.dialog('open');
-//     return false;
-// });
+
 $( "#show_policy" ).on( "click", policy);
 
 function policy(){
-   
-
-       alert("inside the old one");
-         
-  
+ 
                     ///////////////////// the component that contain the rules
-       var node_input_rule_container = '<div id="div_rule" style="border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">';
-       for (var i = 0; i < decimal.length; i++) {
-        alert("inside for i =" + i);
-        node_input_rule_container = node_input_rule_container + '<a href="#" class="btn-rule" id="'+ i +'" style="margin-top: 4px;"> Rule '+ i +'</a>';
-           };
-            node_input_rule_container = node_input_rule_container + '</div>'  
-        $(node_input_rule_container).appendTo("#fragment-3");
-
-          ////////////////////////////////// once you select a rule 
-
-
-$('body').on('click', '.btn-rule', function(){
-                    
-        var id = this.id;
-        var pre="Object Property :";  
-        for(var property in decimal[id].object){
-                if (decimal[id].object[property] != ""){ pre = pre + '\n' +property +" : "+ decimal[id].object[property]; }
-                }
-        var node_input_object_container = '<pre id="object">'+"  "+ pre +"  "+ '</pre>';
-          $(node_input_object_container).appendTo(document.getElementById("div_rule"));
-        var node_input_flow_container ='<div id="div_flow">';
-                    for (var j = 0; j < decimal[id].flow.length; j++) {
-                      alert("inside for j =" + j);
-                      node_input_flow_container = node_input_flow_container +  '<a href="#" class="btn-flow" id="'+ j +'" style="margin-top: 4px;"> Flow '+ j +'</a>';
-                    };
-                    node_input_flow_container = node_input_flow_container + '</div>'
-         $(node_input_flow_container).appendTo(document.getElementById("div_rule"));
-
-
-           ///////////////////      once you select a flow 
-
-                                  $('body').on('click', '.btn-flow', function(){ 
-                                    var fid = this.id;
-                                    var pre="Target Property :"; 
-                                    var obj = decimal[id].flow[fid];
-                                                                /////////////////////////////////////// display the target or the source 
-                                    var attribue = Object.getOwnPropertyNames(obj)[0]; 
-                                    var tt = obj[attribue]; 
-                                    var fpre = attribue + " Property :";
-                                                      for(var prop in tt ){
-                                                       if (tt[prop] != ""){  fpre = fpre + '\n' +prop +" : "+ tt[prop]; }
-                                                         }
+      var node_input_rule_container = '<div id="div_rule" style="border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">';
+                 for (var i = 0; i < decimal.length; i++) {
+                                 node_input_rule_container = node_input_rule_container + '<a href="#" class="btn-rule" id="'+ i +'" style="margin-top: 4px;"> Rule '+ i +'</a>';
+                               };
+       var ruleList = document.createElement("select");
+       ruleList.id = "Rules";
+      var d = document.getElementById('display');
+       d.appendChild(ruleList);
+      for (var i = 0; i < decimal.length; i++) {
+       var option = document.createElement("option");
+       option.value =  i ;
+       option.text = "rule " + i;
+       ruleList.appendChild(option);
+                   }
+                   ruleList.onchange = function() {
                                     
-                                    var node_input_source_container = '<pre id="source">'+"  "+ fpre +"  "+ ' </pre>';
-          $(node_input_source_container).appendTo(document.getElementById("div_rule"));  /////////////////////////////////////// display the lock of this lock 
-
-
-                                  var attribue = Object.getOwnPropertyNames(obj)[1];
-                                  var ray = obj[attribue]; 
-                                  var node_input_locks_container = "";
-                                  for (var l = 0; l < ray.length; l++) {
-                                    alert("inside for l =" + l);
-                                     node_input_locks_container =  node_input_locks_container + '<a href="#" class="btn-lock" id="'+ l +'" style="margin-top: 4px;"> Lock '+ l +'</a>';
-                                  };
-
-           $(node_input_locks_container).appendTo(document.getElementById("div_rule"));
-
-
-                                                    //////////////// once you select a lock
-                                   
-                                                                                             $('body').on('click', '.btn-lock', function(){ 
-                                                                                                      var lid = this.id;
-                                                                                                      var lobj = ray[lid];
-                                                                                                      var lpre=" Lock Property :";  
-                                                                                                            for(var lprop in lobj){
-                                                                                                                  if (lobj[lprop] != ""){ lpre = lpre + '\n' + lprop +" : "+ lobj[lprop]; }
-                                                                                                               }
-                                                                                              var node_input_locks_description_container = '<pre>'+"  "+ lpre +"  "+ ' </pre>';
-                                                                                            $(node_input_locks_description_container).appendTo(document.getElementById("div_rule"));
-                                                                                            });
-            
-
-                                  });
-
-
-});
-
-var close = '<a href="#" class="btn btn-mini" id="close_policy" style="margin-top: 4px;"><i class="fa fa-remove"></i> Close</a>';
-$(close).appendTo(document.getElementById("div_rule"));
-var but =document.getElementById("close_policy");
-$(but).on( "click", hide);
-function hide() { alert("closing ..."); $(document.getElementById("object")).remove(); $(document.getElementById("source")).remove(); $(document.getElementById("div_flow")).remove(); $(document.getElementById("div_rule")).remove(); alert("closing");}
+                                    var r =$("#Rules").val();
+                                      var flowList = document.createElement("select");
+                                       flowList.id = "Flows";
+                                      d.appendChild(flowList);
+                                      for (var j = 0; j < decimal[r].flow.length; j++) {
+                                       var option = document.createElement("option");
+                                       option.value =  j ;
+                                       option.text = "flow " + j;
+                                       flowList.appendChild(option);
+                                     }
+                   flowList.onchange = function() {
+                                    
+                                   alert($("#Flows").val());
+                                    
+                                     }
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////// the Policy content end 
-// $(document).ready(function() {
-// $('#Policy_dialog').dialog({ autoOpen: false })
-// $("#show_policy").click(function(){ $('#Policy_dialog').dialog('open'); });
-// });
-
-// var text = $('<pre>'+"  "+ decimal[0].object.name +"  "+ '\n' + decimal[0].object.type +"  "+ '\n' +  decimal[0].object.output +"  "+ '\n' +  decimal[0].object.id  +"  "+ ' </pre>').appendTo(container);
-// var deleteButton = $('<a href="#" class="btn btn-mini" id="node-input-remove-rule" style="margin-top: 4px;">).appendTo(container);
-// var addButton = $('<a href="#" class="btn btn-mini" id="node-input-add-rule" style="margin-top: 4px;"><i class="fa fa-plus"></i></a>').appendTo(container);
-
-
-
+}
 },
 
 oneditsave: function() {

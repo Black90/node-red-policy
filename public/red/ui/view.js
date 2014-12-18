@@ -991,27 +991,6 @@ RED.view = (function() {
         RED.touch.radialMenu.show(obj,pos,options);
         resetMouseVars();
     }
-    
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// create our own methode or something like that
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     function redraw() {
         // if ( verify == 0 )
@@ -1217,221 +1196,218 @@ RED.view = (function() {
                             .on("dblclick",function(d,i) { var port = d3.select(this); RED.notify( " dblclick on this in port" ,"error"); })
                             .on("touchend",function(d){portMouseUp(d,1,0);} )
                             /////////////////////////////////////////////////////////////////////////////////// click on the input
-                            .on("click",function(d,i) { var port = d3.select(this); RED.notify( " click on this out port" ,"error");
+                            .on("click",function(d,i) { var port = d3.select(this);
 
+//the function resposible for the dialog that will be displayed when the user will click on the input button 
 
+function openDialog() {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-function openDialog(names) {
-Policy_dirty = true ;
 Check = Check +1;
-//alert(Check);
-var str = "dialog"+ Check ;
-var str1 = "selection_dialog" + Check;
-var str2 = "lock_config_dialog" + Check;
-var str3 = "close" + Check;
+var user;
+var groups;
+var nbr_rules = 0;
+var dlg = "dialog"+ Check ;
+var condiv = "node-input-rule-container-div" + Check;
+var con = "node-input-rule-container" + Check;
+var btadd = "node-input-add-rule" + Check;
+var operators = [
+                {v:"eq",t:"=="},
+                {v:"neq",t:"!="},
+                {v:"lt",t:"<"},
+                {v:"lte",t:"<="},
+                {v:"gt",t:">"},
+                {v:"gte",t:">="},
+                {v:"btwn",t:"is between"},
+                {v:"cont",t:"contains"},
+                {v:"regex",t:"matches regex"},
+                {v:"true",t:"is true"},
+                {v:"false",t:"is false"},
+                {v:"null",t:"is null"},
+                {v:"nnull",t:"is not null"},
+                {v:"else",t:"otherwise"}
+            ];
+  // get the group list using curl request
 
-$(document.body).append('<div id="'+ str +'" ><div id="'+ str1 +'" ></div><div id="'+ str2 +'" ></div><input type="button" id="'+ str3 +'" value="close" ></div>');
-var str = "#" +str;
+ $.ajax({
+                     url:  'http://localhost:4242/groups',
+                     type: 'GET',
+                     contentType: "application/json; charset=utf-8",
+                     crossDomain: true,
+                     success: function (result) {
+                     groups = result;
+                           },
+                      error: function (xhr, ajaxOptions, thrownError) {
+                         alert("Error: " + xhr.status + " " + thrownError);
+                     }
+                 });
+                          // parsing the result of the request and retrieving each group name and id 
+                                                        var gps = JSON.parse(groups);
+                                                        var gp = new Array();
+                                                        for (var i = 0; i < gps.length; i++) {
+                                                           gp.push( { "name": gps[i].name, "id": gps[i].id });
+                                                        };
+ 
+                         // starting with the dialog each time i'm creating a new dialog that is why i used the Check variable to make sure each time it a new dialog
+$(document.body).append('<div id="'+ dlg +'" style="height: 400px; width: 500px;" ><div class="form-row"><div id="'+ condiv +'" style="border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;"><ol id="'+ con +'" style=" list-style-type:none; margin: 0;"></ol></div><a href="#" class="btn btn-mini" id="'+ btadd +'" style="margin-top: 4px;"><i class="fa fa-plus"></i> Add</a></div></div>');
+      /// the whole dialog
+     var dlg = "#" +dlg;
+      // the DIV that contain all the containers
+     var condiv = "#" +condiv;
+      // the container that will contain a rule
+     var con = "#" +con;
+     /// the add button
+     var btadd = "#" +btadd;
+               
+   function generateRule(i,rule) {
+          
+                var container = $('<li/>',{style:"margin:0; padding:8px 0px; border-bottom: 1px solid #ccc;"});
+                var row = $('<div/>').appendTo(container);
+                var selectGroup = $('<select/>',{style:"width:120px; margin-left: 5px; text-align: center;"}).appendTo(row);
+                            
+                     // filling the options in the selection component
+                            for (var j = 0; j < gp.length; j++) {
+                                selectGroup.append($("<option></option>").val(gp[j].name).text(gp[j].name));
+                            } 
 
-var nodes = new Array();
-     $.ajax({
-            headers: {
-                "Accept":"application/json"
-            },
-            cache: false,
-            url: 'flows',
-            success: function(flo) {
-           nodes = RED.nodes.loadNodes(flo);
-
-    }
-    });
-                                                              alert(nodes.length);
-
-
-var array1 = new Array();
-for (var i = 0; i < nodes.length; i++) {
-    array1[i] = nodes[i].name ;
-};
-                                                              alert(array1.length);
-
-
-                                                                                    function addSelectorToDialog(DialogName,SelectorName,array) {
-                                                                                    var dialog1 = document.getElementById(DialogName);
-
-                                                                                    //Create array of options to be added
-                                                                                    //var array = ["Rafik","Raouf","Mercades","Audi"];
-
-                                                                                    //Create and append select list
-                                                                                    var selectList = document.createElement("select");
-                                                                                    selectList.id = SelectorName;
-                                                                                    dialog1.appendChild(selectList);
-
-                                                                                    //Create and append the options
-                                                                                    for (var i = 0; i < array.length; i++) {
-                                                                                        var option = document.createElement("option");
-                                                                                        option.value = array[i];
-                                                                                        option.text = array[i];
-                                                                                        selectList.appendChild(option);
-                                                                                    }
-                                                                   
-                                                                                    }
-
-
-var comp = new Array();
-var AllLocks ;
-$.ajax({
-            url:  'http://localhost:4242/list',
-            type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            //dataType: 'json',
-            crossDomain: true,
-            //async:false,
+               
+                $(con).append(container);
                 
-            success: function (result) {
-         
-                AllLocks = result;
-              
-                              for (var i = 0; i < result.length; i++) {  
-                               var lock = result[i];
-                               var response ="";
-                                        for (var j = 0; j < Object.getOwnPropertyNames(lock).length; j++) {
-                                      
-                        if ( Object.getOwnPropertyNames(lock)[j] == "description"){ var lock_description_component = '<input  type="button" id="description" value="Read About">'; }
-                        if ( Object.getOwnPropertyNames(lock)[j] == "args"){ 
-                                                                
-                                                 var list = lock[Object.getOwnPropertyNames(lock)[j]];
-                                                 for (var k = 0; k < list.length; k++) {
-                                                                    var object = list[k];
-                                                                    var string = "group";    
-                                                                    if ( object.name == "Trust Level"){  string =  "trust";  } 
-                                                                    if ( object.name == "Reputation Level"){  string =  "reputation";  }
-                                                                    var component = '<label for="attribute'+'_'+k+'"> '+object.name +' </label><input id="'+ string + k + Check +'"  value=" plz fill it "  ><br><input type="button" id="attribute'+'_'+k+'_description" value="help" >' ;
-                                                                    response = response + component;
-                                                                   
-                                                     };
-                                                                     
-                                                                          }
-                                    };
-                             comp[i] = response; 
-                                    }
-                        }, error: function (xhr, ajaxOptions, thrownError) {
-                                            alert("Error: " + xhr.status + " " + thrownError);
-                                  }
-        });
+                /// once you selected the group the attributes and the operation component will be displayed
+                selectGroup.change(function() {
+                    var atr;
+                    var nbr;
+                    var name = selectGroup.children("option:selected").val();
+                    for (var g = 0; g < gp.length; g++) {
+                     if (gp[g].name == name) {alert(" the name of the group is  "+ gp[g].name +"  the id of the group is "+gp[g].id); nbr =g; }
+                    };
+               
+                    /// the request to get the attributes of the group that has the id saved in the variable nbr
+                $.ajax({
+                     url:  'http://localhost:4242/groupsAttributes',
+                     data: { 'nbr': nbr },
+                     type: 'GET',
+                     contentType: "application/json; charset=utf-8",
+                     crossDomain: true,
+                     success: function (result) {
+                          atr = JSON.parse(result);
+                            },
+                      error: function (xhr, ajaxOptions, thrownError) {
+                         alert("Error: " + xhr.status + " " + thrownError);
+                     }
+                 });
+
+                     /// the selection component that will contain the attributes of the  selectd group
+               var selectAttributes = $('<select/>',{style:"width:120px; margin-left: 5px; text-align: center;"}).appendTo(row);
+               
+                           for (var e = 0; e < atr.length; e++) {
+                                selectAttributes.append($("<option></option>").val(atr[e].name).text(atr[e].name));
+                           };
+               var selectField = $('<select/>',{style:"width:120px; margin-left: 5px; text-align: center;"}).appendTo(row);
+                            for (var d in operators) {
+                                selectField.append($("<option></option>").val(operators[d].v).text(operators[d].t));
+                            }
+                 /// making the inputs specific to each rule by adding the rule number "i" to the id of the input
+                 
+                 var val =   "node-input-rule-value" + i;
+                 var val1 =  "node-input-rule-btwn-value" + i;
+                 var val2 =  "node-input-rule-btwn-value2" + i;             
+               
+                  /// defining the inputs
+
+                var valueField = $('<input/>',{class:val,type:"text",style:"margin-left: 5px; width: 145px;"}).appendTo(row);
+                var btwnField = $('<span/>').appendTo(row);
+                var btwnValueField = $('<input/>',{class:val1,type:"text",style:"margin-left: 5px; width: 50px;"}).appendTo(btwnField);
+                btwnField.append(" and ");
+                var btwnValue2Field = $('<input/>',{class:val2,type:"text",style:"width: 50px;margin-left:2px;"}).appendTo(btwnField);
+                valueField.hide();
+                btwnField.hide();
+
+                
+                selectField.change(function() {
+                    var type = selectField.children("option:selected").val();
+                    if (type.length < 4) {
+                        selectField.css({"width":"60px"});
+                    } else if (type === "regex") {
+                        selectField.css({"width":"147px"});
+                    } else {
+                        selectField.css({"width":"120px"});
+                    }
+                    if (type === "btwn") {
+                        valueField.hide();
+                        btwnField.show();
+                    } else {
+                        btwnField.hide();
+                        if (type === "true" || type === "false" || type === "null" || type === "nnull" || type === "else") {
+                            valueField.hide();
+                        } else {
+                            valueField.show();
+                        }
+                    }
+                });
+                 
+
+                 var finalspan = $('<span/>',{style:"float: right; margin-top: 3px;margin-right: 10px;"}).appendTo(row);
+                // finalspan.append(' send to <span class="node-input-rule-index">'+i+'</span> ');
+                    
+                 // the save button
+                 var saveButton = $('<a/>',{id: i,href:"#",class:"btn btn-mini", style:"margin-left: 5px;"}).appendTo(finalspan);
+                       $('<i/>',{class:"fa fa-plus"}).appendTo(saveButton);
+
+                saveButton.click(function() {
+               
+                 var val =   ".node-input-rule-value" + this.id;
+                 var val1 =  ".node-input-rule-btwn-value" + this.id;
+                 var val2 =  ".node-input-rule-btwn-value2" + this.id; 
+
+                alert("the selected group is "+ selectGroup.children("option:selected").val());
+                alert("the selected operator is " + selectField.children("option:selected").val());
+                alert("the selected  attribute is " + selectAttributes.children("option:selected").val());
+                alert(" value is " + $(val).val());
+                alert(" value1 is " + $(val1).val());
+                alert(" value2 is " + $(val2).val());
+                    
+                    container.css({"background":"#28e721"});
+                    container.fadeOut(300, function() {
+                        $(this).remove();
+                        $("#node-input-rule-container").children().each(function(i) {
+                        $(this).find(".node-input-rule-index").html($(con).children().length+1);
+                        });
+                    });
+                });
+               // the delete button              
+               var deleteButton = $('<a/>',{href:"#",class:"btn btn-mini", style:"margin-left: 5px;"}).appendTo(finalspan);
+                $('<i/>',{class:"fa fa-remove"}).appendTo(deleteButton);
+
+                deleteButton.click(function() {
+                    container.css({"background":"#fee"});
+                    container.fadeOut(300, function() {
+                        $(this).remove();
+                        $("#node-input-rule-container").children().each(function(i) {
+                            $(this).find(".node-input-rule-index").html(i+1);
+                        });
+
+                    });
+                });
+       });
+
+}
+  $(btadd).click(function() {
+               nbr_rules ++; 
+                   generateRule( nbr_rules ,{t:"",v:"",v2:""});
+                $(condiv).scrollTop($(condiv).get(0).scrollHeight);
+            });
 
 
-
-var str4 = "NodeSelectors" + Check;
-addSelectorToDialog(str1,str4,array1);
-var Nsel = document.getElementById(str4);
-str4 = "#" +str4;
-var flows = new Array();
-Nsel.onchange = function() {
-              var obj ={ "name":$(str4).val(), "type" :"app", "output" :"0", "id" :""};
-              for (var i = 0; i < nodes.length; i++) {
-                  if (nodes[i].name == obj.name) { obj.id = nodes[i].id; alert(nodes[i].id);}
-              };
-                         if ( lockflow.locks.length !=0){  alert("arraylocks is already created"); } 
-                                                                lockflow = { source:{},  locks : [] };
-                                                                lockflow.source = obj;  
-
-            Lsel.onchange = function() {
-                                        var f;
-                                        for (var a = 0; a < Lock_array.length; a++) {
-                                                if (Lock_array[a] == $(str5).val() ) {  f = a;}; 
-                                            };
-                                        addConfigToDialog(str2,comp[f],AllLocks[f],f);
-                                    }
-
-    if ( lockflow.source !=""){ 
-                                // flows= [];
-                                flows.push( { "source": lockflow.source, "locks": lockflow.locks });
-                              } 
-        }
-
-var Lock_array = new Array();
-for (var i = 0; i < AllLocks.length; i++) {
-                        var aux = AllLocks [i];
-                        Lock_array[i] = aux.name;
-       };
-var str5 = "LockSelectors"+ Check;
-addSelectorToDialog(str1,str5,Lock_array);
-var Lsel = document.getElementById(str5);
-str5 = "#" + str5;
-
-                                    function addConfigToDialog(DivName,comp,lock,i) {
-                                          var string = "group";
-                                          var object = lock ;
-                                           if ( object.name == "MinTrustLevel"){  string =  "trust";  }
-                                           if ( object.name == "MinReputationLevel"){   string =  "reputation";  }
-                                                                                   
-                                          var str6 = "save" + Check;
-                                          var str7 = "comp2" + Check;
-                                          var DivN = '<div id="'+str7+'" class="reply_MinReputationLevel">'+comp+'<input type="button" id="'+str6+'" value="save" ></div>';
-                                          var $this = $(document.getElementById(DivName)), $reply = $this.next('.reply_MinReputationLevel');
-                                          $(DivN).insertAfter($this);
-                                          var cmp = document.getElementById(str7);
-                                          var sav = document.getElementById(str6);
-                                                                
-                                                                sav.onclick = function() {
-
-                                                                        var ob =  lock.args;
-                                                                        var attributes = new Array();
-                                                                                for (var k = 0; k < ob.length; k++) {
-                                                                                         var att =  string + k + Check;
-                                                                                         var p = document.getElementById(att);
-                                                                                          att='#'+att;
-                                                                                           attributes[k] = $(att).val();
-                                                                                     }
-                                                                        aux_path =  object.path;
-                                                                        aux_args = attributes;
-                                                                        lockcall.path = aux_path;
-                                                                        lockcall.args = aux_args;
-                                                                                            
-                                                                        if (lockcall.path != null) { lockflow.locks.push({ "path" :lockcall.path, "args":lockcall.args });}
-
-                                                                                          $(cmp).hide();
-                                                                               }
-                                                }
-
-str3 = "#" + str3 
-$(str3).on( "click", close);
-
-                    function close(){
-                    var t =""+ port_i +"";
-
-                    var obje ={ "name":"", "type" :"app", "input" : t, "id" : selected_node.id};
-                    Policy.rules.push({"object": obje, "flow" : flows });
-                    Policy_list.push({ "id" :selected_node.id, "args":Policy.rules});
-                    Policy_dirty = true ;
-                    Policy = { id :"",  rules: [] };
-                    flows= [];
-                    $( str ).dialog("close");
-                             }
-
-
-
-                              $( str ).dialog({
+ $( dlg ).dialog({
                                         autoOpen: false,
                                         show: "blind",
+                                         width: 750,
+                                         height: 400,
                                         hide: "explode"
                                     });
-                         $( str ).dialog("open");
+$( dlg ).dialog("open");
 }
-openDialog("target");})
+openDialog();})
 
                        
 
@@ -1526,200 +1502,215 @@ for (var property in thisNode) { if( typeof property =="object") { RED.notify(Ob
 
 
 
-function openDialog(names) {
-Policy_dirty = true ;
+function openDialog() {
+
 Check = Check +1;
-//alert(Check);
-var str = "dialog"+ Check ;
-var str1 = "selection_dialog" + Check;
-var str2 = "lock_config_dialog" + Check;
-var str3 = "close" + Check;
+var user;
+var groups;
+var nbr_rules = 0;
+var dlg = "dialog"+ Check ;
+var condiv = "node-input-rule-container-div" + Check;
+var con = "node-input-rule-container" + Check;
+var btadd = "node-input-add-rule" + Check;
+var operators = [
+                {v:"eq",t:"=="},
+                {v:"neq",t:"!="},
+                {v:"lt",t:"<"},
+                {v:"lte",t:"<="},
+                {v:"gt",t:">"},
+                {v:"gte",t:">="},
+                {v:"btwn",t:"is between"},
+                {v:"cont",t:"contains"},
+                {v:"regex",t:"matches regex"},
+                {v:"true",t:"is true"},
+                {v:"false",t:"is false"},
+                {v:"null",t:"is null"},
+                {v:"nnull",t:"is not null"},
+                {v:"else",t:"otherwise"}
+            ];
+  // get the group list using curl request
 
-$(document.body).append('<div id="'+ str +'" ><div id="'+ str1 +'" ></div><div id="'+ str2 +'" ></div><input type="button" id="'+ str3 +'" value="close" ></div>');
-var str = "#" +str;
-
-var nodes = new Array();
-     $.ajax({
-            headers: {
-                "Accept":"application/json"
-            },
-            cache: false,
-            url: 'flows',
-            success: function(flo) {
-           nodes = RED.nodes.loadNodes(flo);
-
-    }
-    });
+ $.ajax({
+                     url:  'http://localhost:4242/groups',
+                     type: 'GET',
+                     contentType: "application/json; charset=utf-8",
+                     crossDomain: true,
+                     success: function (result) {
+                     groups = result;
+                           },
+                      error: function (xhr, ajaxOptions, thrownError) {
+                         alert("Error: " + xhr.status + " " + thrownError);
+                     }
+                 });
+                          // parsing the result of the request and retrieving each group name and id 
+                                                        var gps = JSON.parse(groups);
+                                                        var gp = new Array();
+                                                        for (var i = 0; i < gps.length; i++) {
+                                                           gp.push( { "name": gps[i].name, "id": gps[i].id });
+                                                        };
+ 
+                         // starting with the dialog each time i'm creating a new dialog that is why i used the Check variable to make sure each time it a new dialog
+$(document.body).append('<div id="'+ dlg +'" style="height: 400px; width: 500px;" ><div class="form-row"><div id="'+ condiv +'" style="border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;"><ol id="'+ con +'" style=" list-style-type:none; margin: 0;"></ol></div><a href="#" class="btn btn-mini" id="'+ btadd +'" style="margin-top: 4px;"><i class="fa fa-plus"></i> Add</a></div></div>');
+      /// the whole dialog
+     var dlg = "#" +dlg;
+      // the DIV that contain all the containers
+     var condiv = "#" +condiv;
+      // the container that will contain a rule
+     var con = "#" +con;
+     /// the add button
+     var btadd = "#" +btadd;
                
+   function generateRule(i,rule) {
+          
+                var container = $('<li/>',{style:"margin:0; padding:8px 0px; border-bottom: 1px solid #ccc;"});
+                var row = $('<div/>').appendTo(container);
+                var selectGroup = $('<select/>',{style:"width:120px; margin-left: 5px; text-align: center;"}).appendTo(row);
+                            
+                     // filling the options in the selection component
+                            for (var j = 0; j < gp.length; j++) {
+                                selectGroup.append($("<option></option>").val(gp[j].name).text(gp[j].name));
+                            } 
 
-var array1 = new Array();
-for (var i = 0; i < nodes.length; i++) {
-
-    array1[i] = nodes[i].name ;
-};
-                                                    
-
-                                                                                    function addSelectorToDialog(DialogName,SelectorName,array) {
-                                                                                    var dialog1 = document.getElementById(DialogName);
-
-                                                                                    
-                                                                                    //Create and append select list
-                                                                                    var selectList = document.createElement("select");
-                                                                                    selectList.id = SelectorName;
-                                                                                    dialog1.appendChild(selectList);
-
-                                                                                    //Create and append the options
-                                                                                    for (var i = 0; i < array.length; i++) {
-                                                                                        var option = document.createElement("option");
-                                                                                        option.value = array[i];
-                                                                                        option.text = array[i];
-                                                                                        selectList.appendChild(option);
-                                                                                    }
-                                                                   
-                                                                                    }
-
-
-var comp = new Array();
-var AllLocks ;
-$.ajax({
-            url:  'http://localhost:4242/list',
-            type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            //dataType: 'json',
-            crossDomain: true,
-            //async:false,
+               
+                $(con).append(container);
                 
-            success: function (result) {
-         
-                AllLocks = result;
-              
-                              for (var i = 0; i < result.length; i++) {  
-                               var lock = result[i];
-                               var response ="";
-                                        for (var j = 0; j < Object.getOwnPropertyNames(lock).length; j++) {
-                                      
-                        if ( Object.getOwnPropertyNames(lock)[j] == "description"){ var lock_description_component = '<input  type="button" id="description" value="Read About">'; }
-                        if ( Object.getOwnPropertyNames(lock)[j] == "args"){ 
-                                                                
-                                                 var list = lock[Object.getOwnPropertyNames(lock)[j]];
-                                                 for (var k = 0; k < list.length; k++) {
-                                                                    var object = list[k];
-                                                                    var string = "group";    
-                                                                    if ( object.name == "Trust Level"){  string =  "trust";  } 
-                                                                    if ( object.name == "Reputation Level"){  string =  "reputation";  }
-                                                                    var component = '<label for="attribute'+'_'+k+'"> '+object.name +' </label><input id="'+ string + k + Check +'"  value=" plz fill it "  ><br><input type="button" id="attribute'+'_'+k+'_description" value="help" >' ;
-                                                                    response = response + component;
-                                                                   
-                                                     };
-                                                                     
-                                                                          }
-                                    };
-                             comp[i] = response; 
-                                    }
-                        }, error: function (xhr, ajaxOptions, thrownError) {
-                                            alert("Error: " + xhr.status + " " + thrownError);
-                                  }
-        });
+                /// once you selected the group the attributes and the operation component will be displayed
+                selectGroup.change(function() {
+                    var atr;
+                    var nbr;
+                    var name = selectGroup.children("option:selected").val();
+                    for (var g = 0; g < gp.length; g++) {
+                     if (gp[g].name == name) {alert(" the name of the group is  "+ gp[g].name +"  the id of the group is "+gp[g].id); nbr =g; }
+                    };
+               
+                    /// the request to get the attributes of the group that has the id saved in the variable nbr
+                $.ajax({
+                     url:  'http://localhost:4242/groupsAttributes',
+                     data: { 'nbr': nbr },
+                     type: 'GET',
+                     contentType: "application/json; charset=utf-8",
+                     crossDomain: true,
+                     success: function (result) {
+                          atr = JSON.parse(result);
+                            },
+                      error: function (xhr, ajaxOptions, thrownError) {
+                         alert("Error: " + xhr.status + " " + thrownError);
+                     }
+                 });
+
+                     /// the selection component that will contain the attributes of the  selectd group
+               var selectAttributes = $('<select/>',{style:"width:120px; margin-left: 5px; text-align: center;"}).appendTo(row);
+               
+                           for (var e = 0; e < atr.length; e++) {
+                                selectAttributes.append($("<option></option>").val(atr[e].name).text(atr[e].name));
+                           };
+               var selectField = $('<select/>',{style:"width:120px; margin-left: 5px; text-align: center;"}).appendTo(row);
+                            for (var d in operators) {
+                                selectField.append($("<option></option>").val(operators[d].v).text(operators[d].t));
+                            }
+                 /// making the inputs specific to each rule by adding the rule number "i" to the id of the input
+                 
+                 var val =   "node-input-rule-value" + i;
+                 var val1 =  "node-input-rule-btwn-value" + i;
+                 var val2 =  "node-input-rule-btwn-value2" + i;             
+               
+                  /// defining the inputs
+
+                var valueField = $('<input/>',{class:val,type:"text",style:"margin-left: 5px; width: 145px;"}).appendTo(row);
+                var btwnField = $('<span/>').appendTo(row);
+                var btwnValueField = $('<input/>',{class:val1,type:"text",style:"margin-left: 5px; width: 50px;"}).appendTo(btwnField);
+                btwnField.append(" and ");
+                var btwnValue2Field = $('<input/>',{class:val2,type:"text",style:"width: 50px;margin-left:2px;"}).appendTo(btwnField);
+                valueField.hide();
+                btwnField.hide();
+
+                
+                selectField.change(function() {
+                    var type = selectField.children("option:selected").val();
+                    if (type.length < 4) {
+                        selectField.css({"width":"60px"});
+                    } else if (type === "regex") {
+                        selectField.css({"width":"147px"});
+                    } else {
+                        selectField.css({"width":"120px"});
+                    }
+                    if (type === "btwn") {
+                        valueField.hide();
+                        btwnField.show();
+                    } else {
+                        btwnField.hide();
+                        if (type === "true" || type === "false" || type === "null" || type === "nnull" || type === "else") {
+                            valueField.hide();
+                        } else {
+                            valueField.show();
+                        }
+                    }
+                });
+                 
+
+                 var finalspan = $('<span/>',{style:"float: right; margin-top: 3px;margin-right: 10px;"}).appendTo(row);
+                // finalspan.append(' send to <span class="node-input-rule-index">'+i+'</span> ');
+                    
+                 // the save button
+                 var saveButton = $('<a/>',{id: i,href:"#",class:"btn btn-mini", style:"margin-left: 5px;"}).appendTo(finalspan);
+                       $('<i/>',{class:"fa fa-plus"}).appendTo(saveButton);
+
+                saveButton.click(function() {
+               
+                 var val =   ".node-input-rule-value" + this.id;
+                 var val1 =  ".node-input-rule-btwn-value" + this.id;
+                 var val2 =  ".node-input-rule-btwn-value2" + this.id; 
+
+                alert("the selected group is "+ selectGroup.children("option:selected").val());
+                alert("the selected operator is " + selectField.children("option:selected").val());
+                alert("the selected  attribute is " + selectAttributes.children("option:selected").val());
+                alert(" value is " + $(val).val());
+                alert(" value1 is " + $(val1).val());
+                alert(" value2 is " + $(val2).val());
+                    
+                    container.css({"background":"#28e721"});
+                    container.fadeOut(300, function() {
+                        $(this).remove();
+                        $("#node-input-rule-container").children().each(function(i) {
+                        $(this).find(".node-input-rule-index").html($(con).children().length+1);
+                        });
+                    });
+                });
+               // the delete button              
+               var deleteButton = $('<a/>',{href:"#",class:"btn btn-mini", style:"margin-left: 5px;"}).appendTo(finalspan);
+                $('<i/>',{class:"fa fa-remove"}).appendTo(deleteButton);
+
+                deleteButton.click(function() {
+                    container.css({"background":"#fee"});
+                    container.fadeOut(300, function() {
+                        $(this).remove();
+                        $("#node-input-rule-container").children().each(function(i) {
+                            $(this).find(".node-input-rule-index").html(i+1);
+                        });
+
+                    });
+                });
+       });
+
+}
+  $(btadd).click(function() {
+               nbr_rules ++; 
+                   generateRule( nbr_rules ,{t:"",v:"",v2:""});
+                $(condiv).scrollTop($(condiv).get(0).scrollHeight);
+            });
 
 
-
-var str4 = "NodeSelectors" + Check;
-addSelectorToDialog(str1,str4,array1);
-var Nsel = document.getElementById(str4);
-str4 = "#" +str4;
-var flows = new Array();
-Nsel.onchange = function() {
-              var obj ={ "name":$(str4).val(), "type" :"app", "input" :"0", "id" :""};
-              for (var i = 0; i < nodes.length; i++) {
-                  if (nodes[i].name == obj.name) { obj.id = nodes[i].id; alert(nodes[i].id);}
-              };
-                         if ( lockflow.locks.length !=0){  alert("arraylocks is already created"); } 
-                                                                lockflow = { target:{},  locks : [] };
-                                                                lockflow.target = obj;  
-
-            Lsel.onchange = function() {
-                                        var f;
-                                        for (var a = 0; a < Lock_array.length; a++) {
-                                                if (Lock_array[a] == $(str5).val() ) {  f = a;}; 
-                                            };
-                                        addConfigToDialog(str2,comp[f],AllLocks[f],f);
-                                    }
-
-    if ( lockflow.target !=""){ 
-                                // flows= [];
-                                flows.push( { "target": lockflow.target, "locks": lockflow.locks });
-                              } 
-        }
-
-var Lock_array = new Array();
-for (var i = 0; i < AllLocks.length; i++) {
-                        var aux = AllLocks [i];
-                        Lock_array[i] = aux.name;
-       };
-var str5 = "LockSelectors"+ Check;
-addSelectorToDialog(str1,str5,Lock_array);
-var Lsel = document.getElementById(str5);
-str5 = "#" + str5;
-
-                                    function addConfigToDialog(DivName,comp,lock,i) {
-                                          var string = "group";
-                                          var object = lock ;
-                                           if ( object.name == "MinTrustLevel"){  string =  "trust";  }
-                                           if ( object.name == "MinReputationLevel"){   string =  "reputation";  }
-                                                                                   
-                                          var str6 = "save" + Check;
-                                          var str7 = "comp2" + Check;
-                                          var DivN = '<div id="'+str7+'" class="reply_MinReputationLevel">'+comp+'<input type="button" id="'+str6+'" value="save" ></div>';
-                                          var $this = $(document.getElementById(DivName)), $reply = $this.next('.reply_MinReputationLevel');
-                                          $(DivN).insertAfter($this);
-                                          var cmp = document.getElementById(str7);
-                                          var sav = document.getElementById(str6);
-                                                                
-                                                                sav.onclick = function() {
-
-                                                                        var ob =  lock.args;
-                                                                        var attributes = new Array();
-                                                                                for (var k = 0; k < ob.length; k++) {
-                                                                                         var att =  string + k + Check;
-                                                                                         var p = document.getElementById(att);
-                                                                                          att='#'+att;
-                                                                                           attributes[k] = $(att).val();
-                                                                                     }
-                                                                        aux_path =  object.path;
-                                                                        aux_args = attributes;
-                                                                        lockcall.path = aux_path;
-                                                                        lockcall.args = aux_args;
-                                                                                            
-                                                                        if (lockcall.path != null) { lockflow.locks.push({ "path" :lockcall.path, "args":lockcall.args });}
-
-                                                                                          $(cmp).hide();
-                                                                               }
-                                                }
-
-str3 = "#" + str3 
-$(str3).on( "click", close);
-
-                    function close(){
-                     var t =""+ port_i +"";
-                    var object ={ "name":"", "type" :"app", "output" : t, "id" : selected_node.id};
-                    Policy.rules.push({"object": object, "flow" : flows });
-                    Policy_list.push({ "id" :selected_node.id, "args":Policy.rules});
-                    Policy_dirty = true ;
-                    Policy = { id :"",  rules: [] };
-                    flows= [];
-                    $( str ).dialog("close");
-                             }
-
-
-
-                              $( str ).dialog({
+ $( dlg ).dialog({
                                         autoOpen: false,
                                         show: "blind",
+                                         width: 750,
+                                         height: 400,
                                         hide: "explode"
                                     });
-                         $( str ).dialog("open");
+$( dlg ).dialog("open");
 }
-openDialog("target");})
+openDialog();})
+
                           
 
 

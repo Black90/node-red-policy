@@ -1,0 +1,17 @@
+to get the token :
+curl -H "Content-Type: application/json;charset=UTF-8" -d '{"username":"test2","password":"pass"}' -X POST http://132.231.11.217:8080/auth/user/
+
+then save it in a variable in the shell export TOKEN then to check if ti was written echo $TOKEN
+
+
+to  get the user info espacally:
+curl -H "Authorization: Bearer $TOKEN" -H "Transferjson;charset=UTF-8" -H "Content-Type: application/json;charset=UTF-8" http://132.231.11.217:8080/idm/user/info/
+ NB the generation of the TOKEN must be on the same terminal that you will use it to 
+ 
+ 
+ add attributes to a group:
+ curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" -d '{"name":"field1","type":"string"}' -X POST http://132.231.11.217:8080/idm/group/dd326fcd-99b7-4d04-b22b-218068783c52/attribute_definition/
+ 
+ display all the attributes:
+ curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" http://132.231.11.217:8080/idm/group_attributes/dd326fcd-99b7-4d04-b22b-218068783c52/
+ 

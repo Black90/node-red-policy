@@ -29,7 +29,9 @@ app.get('/api', function (req, res) {
 
 
 
-   
+  var circle = require('./circle');
+console.log( 'The area of a circle of radius 4 is '+ circle.area(4));
+  
 MongoClient.connect('mongodb://127.0.0.1:27017/raouf', function(err, db) {
     if(err) throw err;
 
@@ -120,20 +122,69 @@ MongoClient.connect('mongodb://127.0.0.1:27017/raouf', function(err, db) {
 app.get('/jar', function (req, res) {
 
   var exec = require('child_process').exec, child;
-     
-     child = exec('/usr/bin/java -cp /root/Home/Git/policy_node-red/extension/Json2BP-1.0-SNAPSHOT-jar-with-dependencies.jar com.mycompany.json2bp.MainClass  /root/Home/Git/policy_node-red/flows_localhost.json',
+     // child = exec('/usr/bin/java -cp /root/Downloads/work/Json2BP-1.0-SNAPSHOT-jar-with-dependencies.jar com.mycompany.json2bp.MainClass /root/Downloads/try.json',
+     // child = exec('/usr/bin/java -cp /root/Downloads/work/Json2BP-1.0-SNAPSHOT-jar-with-dependencies.jar com.mycompany.json2bp.MainClass  /root/Downloads/node-red-0.9.0/flows_localhost.json',
+     // child = exec('curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/user/info/',
+     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/user/info/'
+     // var command = "curl -H \"Content-Type: application/json;charset=UTF-8\" -d '{\"username\":\"test2\",\"password\":\"pass\"}' -X POST http://132.231.11.217:8080/auth/user/"
+     child = exec(command,
       function (error, stdout, stderr){
-      console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr);
+      // console.log('stdout: ' + stdout);
+      // console.log('stderr: ' + stderr);
       res.send(stdout);
       if(error !== null){
       console.log('exec error: ' + error);
     }});
 });
+var gp_list ; var ids = new Array();
+
+app.get('/groups', function (req, res) {
+
+  var exec = require('child_process').exec, child;
+
+     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/group/?page=0'
+     
+     child = exec(command,
+      function (error, stdout, stderr){
+       gp_list = stdout;
+      // console.log('stdout: ' + stdout);
+      // console.log('stderr: ' + stderr);
+       var gps = JSON.parse(gp_list);
+          for (var i = 0; i < gps.length; i++) {
+             ids[i]= gps[i].id;
+          };
+           // console.log(ids.length);
+      res.send(stdout);
+      if(error !== null){
+      console.log('exec error: ' + error);
+   
+    }});
+  
+
+});
 
 
 
 
+app.get('/groupsAttributes', function (req, res) {
+
+  var exec = require('child_process').exec, child;
+   // console.log(ids.length);
+   // console.log(ids[0]);
+   // console.log("this is the argument tha we got back from the get the request");
+   // console.log(req.query.nbr);
+   // console.log(ids[req.query.nbr]);
+     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" http://132.231.11.217:8080/idm/group_attributes/'+ ids[req.query.nbr]+'/' ;
+     
+     child = exec(command,
+      function (error, stdout, stderr){
+      // console.log('stdout: ' + stdout);
+      // console.log('stderr: ' + stderr);
+      res.send(stdout);
+      if(error !== null){
+      console.log('exec error: ' + error);
+    }});
+});
 
 
 
