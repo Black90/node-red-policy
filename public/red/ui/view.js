@@ -1241,7 +1241,6 @@ while(pagenbr == 0 || grps.length == 2 ) {
                      contentType: "application/json; charset=utf-8",
                      crossDomain: true,
                      success: function (result) {
-                     alert(result);
                      var grps = result;
                      groups =   groups + grps;
                      if(grps){ alert("inside grps"); alert(grps.length);}
@@ -1253,12 +1252,11 @@ while(pagenbr == 0 || grps.length == 2 ) {
                      }
                  });
                           // parsing the result of the request and retrieving each group name and id 
-                                                      
-                                                alert(groups)
+
   pagenbr ++;                                                     
 }
-alert("outside while");
-                                                        // var gps = JSON.parse(groups);
+
+                                                       
                                                         var gps = JSON.parse(groups);
                                                         var gp = new Array();
                                                         
@@ -1540,7 +1538,7 @@ function openDialog() {
 
 Check = Check +1;
 var user;
-var groups;
+var groups = "";
 var nbr_rules = 0;
 var dlg = "dialog"+ Check ;
 var condiv = "node-input-rule-container-div" + Check;
@@ -1564,23 +1562,55 @@ var operators = [
             ];
   // get the group list using curl request
 
+ 
+                                                                 
+var pagenbr =0;
+var grps = "";
+while(pagenbr == 0 || grps.length == 2 ) {
+
  $.ajax({
                      url:  'http://localhost:4242/groups',
+                     data: { 'pagenbr': pagenbr },
                      type: 'GET',
                      contentType: "application/json; charset=utf-8",
                      crossDomain: true,
                      success: function (result) {
-                     groups = result;
+                     var grps = result;
+                     groups =   groups + grps;
+                     if(grps){ alert("inside grps"); alert(grps.length);}
+                                      
+
                            },
                       error: function (xhr, ajaxOptions, thrownError) {
                          alert("Error: " + xhr.status + " " + thrownError);
                      }
                  });
-                          // parsing the result of the request and retrieving each group name and id 
+
+  pagenbr ++;                                                     
+}
+
+                                                        // var gps = JSON.parse(groups);
                                                         var gps = JSON.parse(groups);
                                                         var gp = new Array();
+                                                        
                                                         for (var i = 0; i < gps.length; i++) {
-                                                           gp.push( { "name": gps[i].name, "id": gps[i].id });
+                                                             
+                                                            $.ajax({
+                                                                         url:  'http://localhost:4242/user',
+                                                                         data: { 'user': gps[i].owner_id },
+                                                                         type: 'GET',
+                                                                         contentType: "application/json; charset=utf-8",
+                                                                         crossDomain: true,
+                                                                         success: function (result1) {
+                                                                           var   usr = JSON.parse(result1);
+                                                                            gp.push( { "name": usr.username+":"+gps[i].name, "id": gps[i].id });                                                                             
+                                                                                },
+                                                                          error: function (xhr, ajaxOptions, thrownError) {
+                                                                             alert("Error: " + xhr.status + " " + thrownError);
+                                                                         }
+                                                                     });
+                                                          
+                                                        
                                                         };
  
                          // starting with the dialog each time i'm creating a new dialog that is why i used the Check variable to make sure each time it a new dialog
@@ -1613,11 +1643,10 @@ $(document.body).append('<div id="'+ dlg +'" style="height: 400px; width: 500px;
                     var atr;
                     var nbr;
                     var name = selectGroup.children("option:selected").val();
-                    for (var g = 0; g < gp.length; g++) {
-                     if (gp[g].name == name) {alert(" the name of the group is  "+ gp[g].name +"  the id of the group is "+gp[g].id); nbr =g; }
-                    };
+                    
                
                     /// the request to get the attributes of the group that has the id saved in the variable nbr
+                
                 $.ajax({
                      url:  'http://localhost:4242/groupsAttributes',
                      data: { 'nbr': nbr },

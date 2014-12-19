@@ -127,6 +127,21 @@ console.log("called jar methods");
 var gp_list =" " ; var ids = new Array();
 
 
+app.get('/jar', function (req, res) {
+
+  var exec = require('child_process').exec, child;
+     
+      child = exec('/usr/bin/java -cp /root/Home/Git/policy_node-red/extension/Json2BP-1.0-SNAPSHOT-jar-with-dependencies.jar com.mycompany.json2bp.MainClass  /root/Home/Git/policy_node-red/flows_localhost.json',
+    
+      function (error, stdout, stderr){
+
+      res.send(stdout);
+      if(error !== null){
+      console.log('exec error: ' + error);
+    }});
+});
+
+
 
 app.get('/groups', function (req, res) {
 
