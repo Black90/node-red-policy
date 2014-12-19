@@ -1228,6 +1228,12 @@ var operators = [
             ];
   // get the group list using curl request
 
+ 
+                                                                 
+
+
+
+
  $.ajax({
                      url:  'http://localhost:4242/groups',
                      type: 'GET',
@@ -1243,8 +1249,25 @@ var operators = [
                           // parsing the result of the request and retrieving each group name and id 
                                                         var gps = JSON.parse(groups);
                                                         var gp = new Array();
+                                                        
                                                         for (var i = 0; i < gps.length; i++) {
-                                                           gp.push( { "name": gps[i].name, "id": gps[i].id });
+                                                             
+                                                            $.ajax({
+                                                                         url:  'http://localhost:4242/user',
+                                                                         data: { 'user': gps[i].owner_id },
+                                                                         type: 'GET',
+                                                                         contentType: "application/json; charset=utf-8",
+                                                                         crossDomain: true,
+                                                                         success: function (result1) {
+                                                                           var   usr = JSON.parse(result1);
+                                                                            gp.push( { "name": usr.username+":"+gps[i].name, "id": gps[i].id });                                                                             
+                                                                                },
+                                                                          error: function (xhr, ajaxOptions, thrownError) {
+                                                                             alert("Error: " + xhr.status + " " + thrownError);
+                                                                         }
+                                                                     });
+                                                          
+                                                        
                                                         };
  
                          // starting with the dialog each time i'm creating a new dialog that is why i used the Check variable to make sure each time it a new dialog
@@ -1277,9 +1300,7 @@ $(document.body).append('<div id="'+ dlg +'" style="height: 400px; width: 500px;
                     var atr;
                     var nbr;
                     var name = selectGroup.children("option:selected").val();
-                    for (var g = 0; g < gp.length; g++) {
-                     if (gp[g].name == name) {alert(" the name of the group is  "+ gp[g].name +"  the id of the group is "+gp[g].id); nbr =g; }
-                    };
+                    
                
                     /// the request to get the attributes of the group that has the id saved in the variable nbr
                 $.ajax({

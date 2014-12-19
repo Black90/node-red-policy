@@ -231,39 +231,44 @@ $( "#show_policy" ).on( "click", policy);
 function policy(){
  
                     ///////////////////// the component that contain the rules
-      var node_input_rule_container = '<div id="div_rule" style="border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">';
+      alert("inside the policy methode")
+      var table = '<table>';
+                
                  for (var i = 0; i < decimal.length; i++) {
-                                 node_input_rule_container = node_input_rule_container + '<a href="#" class="btn-rule" id="'+ i +'" style="margin-top: 4px;"> Rule '+ i +'</a>';
-                               };
-       var ruleList = document.createElement("select");
-       ruleList.id = "Rules";
-      var d = document.getElementById('display');
-       d.appendChild(ruleList);
-      for (var i = 0; i < decimal.length; i++) {
-       var option = document.createElement("option");
-       option.value =  i ;
-       option.text = "rule " + i;
-       ruleList.appendChild(option);
+                               
+                         table =  table +'<tr><td> Rule number : </td><td>'+i+'</td></tr>' ;
+                            for(var prop in decimal[i].object)
+                              {
+                                table =  table +'<tr><td>' + prop + ': </td><td>'+ decimal[i].object[prop] +'</td></tr>' ;
+                              }     
+                              var flow = decimal[i].flow;
+
+                 for (var f = 0; f < flow.length; f++) {  
+                              var flow_ins = flow[f];           
+                              var str = Object.getOwnPropertyNames(flow_ins)[0];
+                              var src =  flow_ins[str];
+                                table =  table +'<tr><td>' + str +' : </tr>' ;
+                            for(var pro in src)
+                              {
+                                table =  table +'<tr><td>' + pro + ': </td><td>'+ src[pro] +'</td></tr>' ;
+                              } 
+                  for (var l = 0; l < flow_ins.locks.length; l++) {
+                    var lock_ins = flow_ins.locks[l];
+                    table =  table +'<tr><td> Path: </td><td>'+ lock_ins.path +'</td></tr>' ;
+                   
+                   for (var a = 0; a < lock_ins.args.length; a++) {
+                      
+                      table =  table +'<tr><td> arg : </td><td>'+ lock_ins.args[a] +'</td></tr>' ;
                    }
-                   ruleList.onchange = function() {
-                                    
-                                    var r =$("#Rules").val();
-                                      var flowList = document.createElement("select");
-                                       flowList.id = "Flows";
-                                      d.appendChild(flowList);
-                                      for (var j = 0; j < decimal[r].flow.length; j++) {
-                                       var option = document.createElement("option");
-                                       option.value =  j ;
-                                       option.text = "flow " + j;
-                                       flowList.appendChild(option);
-                                     }
-                   flowList.onchange = function() {
-                                    
-                                   alert($("#Flows").val());
-                                    
-                                     }
-}
-}
+
+                  }
+                  }
+                  }
+         table = table + '</table>';
+
+         alert(table);
+ var str = $(table).appendTo("#display");
+                                          };
 },
 
 oneditsave: function() {

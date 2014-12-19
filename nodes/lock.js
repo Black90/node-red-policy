@@ -119,24 +119,26 @@ MongoClient.connect('mongodb://127.0.0.1:27017/raouf', function(err, db) {
 
 
 
-app.get('/jar', function (req, res) {
+app.get('/user', function (req, res) {
 
   var exec = require('child_process').exec, child;
-     // child = exec('/usr/bin/java -cp /root/Downloads/work/Json2BP-1.0-SNAPSHOT-jar-with-dependencies.jar com.mycompany.json2bp.MainClass /root/Downloads/try.json',
-     // child = exec('/usr/bin/java -cp /root/Downloads/work/Json2BP-1.0-SNAPSHOT-jar-with-dependencies.jar com.mycompany.json2bp.MainClass  /root/Downloads/node-red-0.9.0/flows_localhost.json',
-     // child = exec('curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/user/info/',
-     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/user/info/'
-     // var command = "curl -H \"Content-Type: application/json;charset=UTF-8\" -d '{\"username\":\"test2\",\"password\":\"pass\"}' -X POST http://132.231.11.217:8080/auth/user/"
+     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" -X GET http://132.231.11.217:8080/idm/user/'+req.query.user ;
+     // var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" -X GET http://132.231.11.217:8080/idm/user/a7980026-a6c8-4e61-a78a-4a259e929171' ;
      child = exec(command,
       function (error, stdout, stderr){
-      // console.log('stdout: ' + stdout);
-      // console.log('stderr: ' + stderr);
+      console.log(req.query.user);
+      console.log('stdout: ' + stdout);
+      console.log('stderr: ' + stderr);
       res.send(stdout);
       if(error !== null){
       console.log('exec error: ' + error);
     }});
+
+console.log("called jar methods");
 });
 var gp_list ; var ids = new Array();
+
+
 
 app.get('/groups', function (req, res) {
 
