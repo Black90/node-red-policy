@@ -1204,7 +1204,7 @@ function openDialog() {
 
 Check = Check +1;
 var user;
-var groups;
+var groups = "";
 var nbr_rules = 0;
 var dlg = "dialog"+ Check ;
 var condiv = "node-input-rule-container-div" + Check;
@@ -1230,23 +1230,35 @@ var operators = [
 
  
                                                                  
-
-
-
+var pagenbr =0;
+var grps = "";
+while(pagenbr == 0 || grps.length == 2 ) {
 
  $.ajax({
                      url:  'http://localhost:4242/groups',
+                     data: { 'pagenbr': pagenbr },
                      type: 'GET',
                      contentType: "application/json; charset=utf-8",
                      crossDomain: true,
                      success: function (result) {
-                     groups = result;
+                     alert(result);
+                     var grps = result;
+                     groups =   groups + grps;
+                     if(grps){ alert("inside grps"); alert(grps.length);}
+                                      
+
                            },
                       error: function (xhr, ajaxOptions, thrownError) {
                          alert("Error: " + xhr.status + " " + thrownError);
                      }
                  });
                           // parsing the result of the request and retrieving each group name and id 
+                                                      
+                                                alert(groups)
+  pagenbr ++;                                                     
+}
+alert("outside while");
+                                                        // var gps = JSON.parse(groups);
                                                         var gps = JSON.parse(groups);
                                                         var gp = new Array();
                                                         
@@ -1303,6 +1315,7 @@ $(document.body).append('<div id="'+ dlg +'" style="height: 400px; width: 500px;
                     
                
                     /// the request to get the attributes of the group that has the id saved in the variable nbr
+                
                 $.ajax({
                      url:  'http://localhost:4242/groupsAttributes',
                      data: { 'nbr': nbr },

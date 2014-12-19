@@ -26,9 +26,6 @@ app.configure(function () {
 
 app.get('/api', function (req, res) {
 	var output;
-
-
-
   var circle = require('./circle');
 console.log( 'The area of a circle of radius 4 is '+ circle.area(4));
   
@@ -36,19 +33,12 @@ MongoClient.connect('mongodb://127.0.0.1:27017/raouf', function(err, db) {
     if(err) throw err;
 
         var collection = db.collection('testData');
-        //    collection.count(function(err, count) {
-        //     console.log(format("count = %s", count));
-        //      lengh = count;
-            
-              
-        // });
 
  collection.find().toArray(function(err, results) {
     if(results != null)                    
          {
-        //console.dir(results);
         console.log(Array.isArray(results));
-      console.dir(results.length);
+        console.dir(results.length);
                 output = results[8];
                 console.log(Array.isArray(output));
                 console.dir(output.length);
@@ -61,8 +51,6 @@ MongoClient.connect('mongodb://127.0.0.1:27017/raouf', function(err, db) {
 
  
 });
-	// var obj = { "name" : "aze" };
-	//res.setHeader('Content-Type', 'application/json');
  console.log(output);
  
   console.log("sending from API ");
@@ -136,20 +124,23 @@ app.get('/user', function (req, res) {
 
 console.log("called jar methods");
 });
-var gp_list ; var ids = new Array();
+var gp_list =" " ; var ids = new Array();
 
 
 
 app.get('/groups', function (req, res) {
 
   var exec = require('child_process').exec, child;
+   var t = 0;
+  // while (t != 0 && stdout != "" ) {
+ 
 
-     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/group/?page=0'
+     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/group/?page='+ req.query.pagenbr ;
      
      child = exec(command,
       function (error, stdout, stderr){
-       gp_list = stdout;
-      // console.log('stdout: ' + stdout);
+          gp_list = stdout;
+       console.log('stdout: ' + stdout);
       // console.log('stderr: ' + stderr);
        var gps = JSON.parse(gp_list);
           for (var i = 0; i < gps.length; i++) {
@@ -159,8 +150,8 @@ app.get('/groups', function (req, res) {
       res.send(stdout);
       if(error !== null){
       console.log('exec error: ' + error);
-   
-    }});
+       }
+  });
   
 
 });
