@@ -12,3 +12,4 @@ TOK=$(head -n 4 output | tail -n 1)
 #echo $TOKEN
 export TOKEN=$TOK
 echo $TOKEN
+rm output
