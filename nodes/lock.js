@@ -21,11 +21,66 @@ app.configure(function () {
   
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
+                ////////////////establishing the authentication of the user in this methode
+      
+var arr = new Array();
+      var exec = require('child_process').exec, child;
+     var command = 'curl -H "Content-Type: application/json;charset=UTF-8" -d \'{"username":"test2","password":"pass"}\' -X POST http://132.231.11.217:8080/auth/user/' ;
+    child = exec(command,
+      function (error, stdout, stderr){
+      // console.log('stdout: ' + stdout);
+      var new_std = stdout.substr(16,stdout.length);
+       arr = new_std.split("\"");
+     
+      // console.log('new stdout: ' + arr[0]);
+       // console.log('stderr: ' + stderr);
+      // res.send(stdout);
+      if(error !== null){
+      console.log('exec error: ' + error);
+    }});
+
+// console.log("extracted the token");
+
+var token;
+var exec = require('child_process').exec, child;
+       // var command = 'export TOKEN='+ arr[0]  ;
+       var command = './exp.sh';
+    child = exec(command,
+      function (error, stdout, stderr){
+      console.log('stdout: ' + stdout);
+      token = stdout;
+      console.log(token);
+      // console.log('stderr: ' + stderr);
+      // res.send(stdout);
+      if(error !== null){
+      console.log('exec error: ' + error);
+    }});
 
 
+ var exec = require('child_process').exec, child;
+    var command = 'echo $TOKEN' ;
+    child = exec(command,
+      function (error, stdout, stderr){
+      // console.log('the echo stdout: ' + stdout);
+      // console.log('stderr: ' + stderr);
+      // res.send(stdout);
+      if(error !== null){
+      console.log('exec error: ' + error);
+    }});
+
+
+
+
+
+
+
+
+
+
+   //curl -H "Content-Type: application/json;charset=UTF-8" -d '{"username":"test2","password":"pass"}' -X POST http://132.231.11.217:8080/auth/user/
 
 app.get('/api', function (req, res) {
-	var output;
+  var output;
   var circle = require('./circle');
 console.log( 'The area of a circle of radius 4 is '+ circle.area(4));
   
@@ -110,8 +165,9 @@ MongoClient.connect('mongodb://127.0.0.1:27017/raouf', function(err, db) {
 app.get('/user', function (req, res) {
 
   var exec = require('child_process').exec, child;
-     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" -X GET http://132.231.11.217:8080/idm/user/'+req.query.user ;
-     // var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" -X GET http://132.231.11.217:8080/idm/user/a7980026-a6c8-4e61-a78a-4a259e929171' ;
+     // var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" -X GET http://132.231.11.217:8080/idm/user/'+req.query.user ;
+     var command = 'curl -H "Authorization: Bearer '+token+'" -H "Content-Type: application/json;charset=UTF-8" -X GET http://132.231.11.217:8080/idm/user/'+req.query.user ;
+     
      child = exec(command,
       function (error, stdout, stderr){
       console.log(req.query.user);
@@ -150,7 +206,7 @@ app.get('/groups', function (req, res) {
   // while (t != 0 && stdout != "" ) {
  
 
-     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/group/?page='+ req.query.pagenbr ;
+     var command = 'curl -H "Authorization: Bearer '+token+'" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/group/?page='+ req.query.pagenbr ;
      
      child = exec(command,
       function (error, stdout, stderr){
@@ -180,10 +236,10 @@ app.get('/groupsAttributes', function (req, res) {
    // console.log(ids.length);
    // console.log(ids[0]);
    // console.log("this is the argument tha we got back from the get the request");
-   // console.log(req.query.nbr);
+    console.log("the parameter recieved id "+req.query.nbr);
    // console.log(ids[req.query.nbr]);
-     var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" http://132.231.11.217:8080/idm/group_attributes/'+ ids[req.query.nbr]+'/' ;
-     
+     var command = 'curl -H "Authorization: Bearer '+token+'" -H "Content-Type: application/json;charset=UTF-8" http://132.231.11.217:8080/idm/group_attributes/'+ ids[req.query.nbr]+'/' ;
+     console.log("command " + command);
      child = exec(command,
       function (error, stdout, stderr){
       // console.log('stdout: ' + stdout);
