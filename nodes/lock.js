@@ -28,30 +28,22 @@ var arr = new Array();
      var command = 'curl -H "Content-Type: application/json;charset=UTF-8" -d \'{"username":"test2","password":"pass"}\' -X POST http://132.231.11.217:8080/auth/user/' ;
     child = exec(command,
       function (error, stdout, stderr){
-      // console.log('stdout: ' + stdout);
       var new_std = stdout.substr(16,stdout.length);
        arr = new_std.split("\"");
-     
-      // console.log('new stdout: ' + arr[0]);
-       // console.log('stderr: ' + stderr);
-      // res.send(stdout);
       if(error !== null){
       console.log('exec error: ' + error);
     }});
 
-// console.log("extracted the token");
+
 
 var token;
 var exec = require('child_process').exec, child;
-       // var command = 'export TOKEN='+ arr[0]  ;
        var command = './exp.sh';
     child = exec(command,
       function (error, stdout, stderr){
       console.log('stdout: ' + stdout);
       token = stdout;
       console.log(token);
-      // console.log('stderr: ' + stderr);
-      // res.send(stdout);
       if(error !== null){
       console.log('exec error: ' + error);
     }});
@@ -61,24 +53,17 @@ var exec = require('child_process').exec, child;
     var command = 'echo $TOKEN' ;
     child = exec(command,
       function (error, stdout, stderr){
-      // console.log('the echo stdout: ' + stdout);
-      // console.log('stderr: ' + stderr);
-      // res.send(stdout);
       if(error !== null){
       console.log('exec error: ' + error);
     }});
 
+             ////////////////end authentication for the user 
 
 
 
 
 
-
-
-
-
-   //curl -H "Content-Type: application/json;charset=UTF-8" -d '{"username":"test2","password":"pass"}' -X POST http://132.231.11.217:8080/auth/user/
-
+   
 app.get('/api', function (req, res) {
   var output;
   var circle = require('./circle');
@@ -132,41 +117,34 @@ MongoClient.connect('mongodb://127.0.0.1:27017/raouf', function(err, db) {
       
          for (var i = 0; i < results.length; i++) {
                      if (typeof results[i] === "object" ) {
-                              //console.log(Object.getOwnPropertyNames(results[i].args)); 
-                            // console.log(results[i].args);
-                             
+                        
                              output = results[1];
-                             // console.log(output);
-                             if (typeof results[i].args === "object" ) {
-                              //console.log(Object.getOwnPropertyNames(results[i].args)); 
-                             // console.log("args is an object");
-                             // console.log(results[i]._id);
-                      }
-                             // console.log(results[i]._id);
+                         
                       }
    
          } 
-         // console.log(results);
+         
          res.send(results);
-         // res.send(output);
+   
     }
     else { console.log(" results are empty");}
            
     });
 
 });
-
-// res.send(output);
  console.log("sending from list");
 });
+
+
+
+
 
 
 
 app.get('/user', function (req, res) {
 
   var exec = require('child_process').exec, child;
-     // var command = 'curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" -X GET http://132.231.11.217:8080/idm/user/'+req.query.user ;
-     var command = 'curl -H "Authorization: Bearer '+token+'" -H "Content-Type: application/json;charset=UTF-8" -X GET http://132.231.11.217:8080/idm/user/'+req.query.user ;
+  var command = 'curl -H "Authorization: Bearer '+token+'" -H "Content-Type: application/json;charset=UTF-8" -X GET http://132.231.11.217:8080/idm/user/'+req.query.user ;
      
      child = exec(command,
       function (error, stdout, stderr){
@@ -177,10 +155,22 @@ app.get('/user', function (req, res) {
       if(error !== null){
       console.log('exec error: ' + error);
     }});
-
-console.log("called jar methods");
 });
+
+
+
+
+
+
+
+
+
+
+
+
 var gp_list =" " ; var ids = new Array();
+
+
 
 
 app.get('/jar', function (req, res) {
@@ -199,14 +189,14 @@ app.get('/jar', function (req, res) {
 
 
 
+
+
+
 app.get('/groups', function (req, res) {
 
   var exec = require('child_process').exec, child;
    var t = 0;
-  // while (t != 0 && stdout != "" ) {
- 
-
-     var command = 'curl -H "Authorization: Bearer '+token+'" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/group/?page='+ req.query.pagenbr ;
+       var command = 'curl -H "Authorization: Bearer '+token+'" -H "Content-Type: application/json;charset=UTF-8"  http://132.231.11.217:8080/idm/group/?page='+ req.query.pagenbr ;
      
      child = exec(command,
       function (error, stdout, stderr){
@@ -217,7 +207,7 @@ app.get('/groups', function (req, res) {
           for (var i = 0; i < gps.length; i++) {
              ids[i]= gps[i].id;
           };
-           // console.log(ids.length);
+         
       res.send(stdout);
       if(error !== null){
       console.log('exec error: ' + error);
@@ -230,20 +220,17 @@ app.get('/groups', function (req, res) {
 
 
 
+
+
+
 app.get('/groupsAttributes', function (req, res) {
 
   var exec = require('child_process').exec, child;
-   // console.log(ids.length);
-   // console.log(ids[0]);
-   // console.log("this is the argument tha we got back from the get the request");
-    console.log("the parameter recieved id "+req.query.nbr);
-   // console.log(ids[req.query.nbr]);
-     var command = 'curl -H "Authorization: Bearer '+token+'" -H "Content-Type: application/json;charset=UTF-8" http://132.231.11.217:8080/idm/group_attributes/'+ ids[req.query.nbr]+'/' ;
+     console.log("the parameter recieved id "+req.query.nbr);
+       var command = 'curl -H "Authorization: Bearer '+token+'" -H "Content-Type: application/json;charset=UTF-8" http://132.231.11.217:8080/idm/group_attributes/'+ ids[req.query.nbr]+'/' ;
      console.log("command " + command);
      child = exec(command,
       function (error, stdout, stderr){
-      // console.log('stdout: ' + stdout);
-      // console.log('stderr: ' + stderr);
       res.send(stdout);
       if(error !== null){
       console.log('exec error: ' + error);
