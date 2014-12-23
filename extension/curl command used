@@ -14,4 +14,11 @@ curl -H "Authorization: Bearer $TOKEN" -H "Transferjson;charset=UTF-8" -H "Conte
  
  display all the attributes:
  curl -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json;charset=UTF-8" http://132.231.11.217:8080/idm/group_attributes/dd326fcd-99b7-4d04-b22b-218068783c52/
+
  
+ 
+ 
+ *********************
+ bdae6f2a-2838-47d7-ad93-8ae73130006b
+ 92f83ea4-2835-4dce-a34a-5711d948c610
+ a7980026-a6c8-4e61-a78a-4a259e929171

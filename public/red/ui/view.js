@@ -1243,10 +1243,7 @@ while(pagenbr == 0 || grps.length == 2 ) {
                      success: function (result) {
                      var grps = result;
                      groups =   groups + grps;
-                     if(grps){ alert("inside grps"); alert(grps.length);}
-                                      
-
-                           },
+                      },
                       error: function (xhr, ajaxOptions, thrownError) {
                          alert("Error: " + xhr.status + " " + thrownError);
                      }
@@ -1311,6 +1308,9 @@ $(document.body).append('<div id="'+ dlg +'" style="height: 400px; width: 500px;
                     var nbr;
                     var name = selectGroup.children("option:selected").val();
                     
+                    for (var t = 0; t < gp.length; t++) {
+                         if (gp[t].name == name){  nbr=t;}
+                       };
                
                     /// the request to get the attributes of the group that has the id saved in the variable nbr
                 
@@ -1474,22 +1474,7 @@ openDialog();})
 
 for (var property in thisNode) { if( typeof property =="object") { RED.notify(Object.getOwnPropertyNames(property),"error"); } }
 })                       
-                        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
                         //thisNode.selectAll(".centerDot").attr({"cx":function(d) { return d.w/2;},"cy":function(d){return d.h/2}});
                         thisNode.attr("transform", function(d) { return "translate(" + (d.x-d.w/2) + "," + (d.y-d.h/2) + ")"; });
                         thisNode.selectAll(".node")
@@ -1518,21 +1503,6 @@ for (var property in thisNode) { if( typeof property =="object") { RED.notify(Ob
                             .on("mouseup",(function(){var node = d; return function(d,i){portMouseUp(node,0,i);}})() )
                             .on("touchend",(function(){var node = d; return function(d,i){portMouseUp(node,0,i);}})() )
                             .on("click",function(d,i) { var port = d3.select(this); RED.notify( " click on this out port" ,"error");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function openDialog() {
 
@@ -1577,7 +1547,7 @@ while(pagenbr == 0 || grps.length == 2 ) {
                      success: function (result) {
                      var grps = result;
                      groups =   groups + grps;
-                     if(grps){ alert("inside grps"); alert(grps.length);}
+                     
                                       
 
                            },
@@ -1589,7 +1559,6 @@ while(pagenbr == 0 || grps.length == 2 ) {
   pagenbr ++;                                                     
 }
 
-                                                        // var gps = JSON.parse(groups);
                                                         var gps = JSON.parse(groups);
                                                         var gp = new Array();
                                                         
@@ -1643,7 +1612,10 @@ $(document.body).append('<div id="'+ dlg +'" style="height: 400px; width: 500px;
                     var atr;
                     var nbr;
                     var name = selectGroup.children("option:selected").val();
-                    
+                  
+                   for (var t = 0; t < gp.length; t++) {
+                         if (gp[t].name == name){  nbr=t;}
+                       };    
                
                     /// the request to get the attributes of the group that has the id saved in the variable nbr
                 
@@ -2218,14 +2190,14 @@ openDialog();})
             workspace_tabs.activateTab(id);
         },
         redraw:redraw,
+        
         showConflict: function(cases){
-           // alert("inside show conflict");
-          // if (verify==0) { verify = 1; alert("verify : " + verify); $("#btn-deploy").addClass("disabled");}
-          // else { verify = 0; }
+
              var link = vis.selectAll(".link").data(RED.nodes.links.filter(function(d) { return d.source.z == activeWorkspace && d.target.z == activeWorkspace }),function(d) { return d.source.id+":"+d.sourcePort+":"+d.target.id;});
 
-        var linkEnter = link.enter().insert("g",".node").attr("class","link");
+             var linkEnter = link.enter().insert("g",".node").attr("class","link");
              var links = vis.selectAll(".link_path")
+        
         links.attr("d",function(d){
                 var numOutputs = d.source.outputs || 1;
                 var sourcePort = d.sourcePort || 0;
@@ -2257,63 +2229,40 @@ openDialog();})
                     (d.target.x-d.target.w/2-scale*node_width)+" "+(d.target.y-scaleY*node_height)+" "+
                     (d.target.x-d.target.w/2)+" "+d.target.y;
         })
-            //alert(Object.getOwnPropertyNames(links));
-                    link.classed("link_unknown",function(d) {
-        //alert("inside link_unknown");
-      // alert(Object.getOwnPropertyNames(d));
-         // if(d.source.type == "test" ){}
-        // inject :  1a267842.a78218
-        //  debug 198dffb6.aae348
-        //  switch  7cd9d3dc.84eb0c
-        // var cases = new Array();
-        // var link1 = { sourceId:"8bb3d855.aaa34", port:0, targetId:"198dffb6.aae348" };
-        // var link2 = { sourceId:"7cd9d3dc.84eb0c", port:0, targetId:"198dffb6.aae348" };
-        // var link3 = { sourceId:"8bb3d855.aaa34", port:0, targetId:"7cd9d3dc.84eb0c" };
-        // cases[cases.length] = link1;
-        // cases[cases.length] = link2;
-        // cases[cases.length] = link3;
-        // alert(cases.length);
-                     
+        
+      link.classed("link_unknown",function(d) {
 
            for (var i = 0; i < cases.length; i++) {
               var itir= cases[i]
                    if( d.target.id == itir.target_id  && d.source.id == itir.source_id && d.sourcePort == itir.port){ return d }
-
-           };
+             };
 
            });
-
-         // return d.target.id == link1.targetId  && d.source.id == link1.sourceId && d.sourcePort == link1.port });
-        // return d.target.id == link2.targetId  && d.source.id == link2.sourceId && d.sourcePort == link2.port });
-         // return d.target.id == link3.targetId  && d.source.id == link3.sourceId && d.sourcePort == link3.port });
         },
         getPolicy: function(id){
           // var removed = Policy_list.splice(i, 1);
-       var alpha = new Array();
-       // alert(Policy_dirty);
-       alert("we start with the length of the Policy list is "+ Policy_list.length );
+         var alpha = new Array();
+          // alert(Policy_dirty);
+         alert("we start with the length of the Policy list is "+ Policy_list.length );
        if (Policy_dirty == true){
-        // alert("the value of the poliy_dirty " + Policy_dirty);
-        
-     
+          // alert("the value of the poliy_dirty " + Policy_dirty);
+          
           for (var i = 0; i < Policy_list.length; i++) {
              // alert( id + " equal " + Policy_list[i].id );
-             if (Policy_list[i].id == id ){ alert("valid"); 
-            
-              
-               if ( alpha.length ==0) { alpha = Policy_list[i].args ; var removed = Policy_list.splice(i, 1); }
-              else{    var alphaNumeric = alpha.concat(Policy_list[i].args);   alpha = alphaNumeric ;  var removed = Policy_list.splice(i, 1);
+               if (Policy_list[i].id == id ){ alert("valid"); 
+                   if ( alpha.length ==0) { alpha = Policy_list[i].args ; var removed = Policy_list.splice(i, 1); }
+                else{    var alphaNumeric = alpha.concat(Policy_list[i].args);   alpha = alphaNumeric ;  var removed = Policy_list.splice(i, 1);
+                  }
                }
-
-            }
                alert("the length of the Policy list"+ Policy_list.length );
           };
-          Policy_dirty == false ;
+        
+        Policy_dirty == false ;
        }
-       alert("the length of the Policy list"+ Policy_list.length );
-         return alpha;
        
-        },
+         alert("the length of the Policy list"+ Policy_list.length );
+         return alpha;
+       },
         
         dirty: function(d) {
             if (d == null) {

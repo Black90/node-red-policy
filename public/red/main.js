@@ -120,19 +120,8 @@ var RED = (function() {
     }
 
     $('#btn-deploy').click(function() { save(); });
-    $('#btn-verify').click(function() { //RED.view.showConflict(); 
+    $('#btn-verify').click(function() { 
 
-      // var exec = require('child_process').exec, child;
-    //   child = exec('/usr/bin/java -cp /root/Downloads/work/hello.jar Hello',
-    //   function (error, stdout, stderr){
-    //   console.log('stdout: ' + stdout);
-    //   console.log('stderr: ' + stderr);
-    //   if(error !== null){
-    //   console.log('exec error: ' + error);
-    // }});
-
-   // var circle = require('./circle');
-// console.log( 'The area of a circle of radius 4 is '+ circle.area(4));
                                                                                         var w ;
                                                                                         $.ajax({
                                                                                                     url:  'http://localhost:4242/jar',
